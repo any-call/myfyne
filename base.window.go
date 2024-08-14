@@ -37,6 +37,14 @@ func (self *BaseWindow) Quit() {
 }
 
 // 显示对话框提示信息
-func (self *BaseWindow) ShowInfo(message string) {
-	dialog.ShowInformation("Info", message, self.GetWindow())
+func (self *BaseWindow) ShowInfo(title string, message string) {
+	if title == "" {
+		title = "Info"
+	}
+
+	dialog.ShowInformation(title, message, self.GetWindow())
+}
+
+func (self *BaseWindow) ShowErr(err error) {
+	dialog.ShowError(err, self.GetWindow())
 }
