@@ -1,12 +1,10 @@
 package myfyne
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/any-call/gobase/frame/myctrl"
 	"image/color"
 )
 
@@ -17,8 +15,10 @@ type Label struct {
 	backgroundColor color.Color
 	fontSize        float32
 	alignment       fyne.TextAlign
-	fixedWidth      float32 //<=0 则说明是自适应的宽
-	fixedHeight     float32 //<=0 则说明是自适应的高
+	textStyle       fyne.TextStyle
+	fixedWidth      float32   //<=0 则说明是自适应的宽
+	fixedHeight     float32   //<=0 则说明是自适应的高
+	padding         EdgeInset //定义内间距
 }
 
 func NewLabel(text string) *Label {
@@ -33,38 +33,11 @@ func NewLabel(text string) *Label {
 }
 
 func (c *Label) CreateRenderer() fyne.WidgetRenderer {
-	text := canvas.NewText(c.title, myctrl.ObjFun(func() color.Color {
-		if c.foregroundColor == nil {
-			return theme.Color(theme.ColorNameForeground)
-		}
-
-		return c.foregroundColor
-	}))
-
+	text := canvas.NewText(c.title, c.Color())
 	text.Alignment = c.alignment
-
-	if c.foregroundColor != nil {
-		text.Color = c.foregroundColor
-	}
-
-	if c.fontSize > 0 {
-		text.TextSize = c.fontSize
-	} else {
-		text.TextSize = theme.TextSize() // 使用默认字体大小
-	}
-
-	background := canvas.NewRectangle(myctrl.ObjFun(func() color.Color {
-		if c.backgroundColor == nil {
-			return theme.Color(theme.ColorNameBackground)
-		}
-
-		return c.backgroundColor
-	}))
-
-	if c.backgroundColor != nil {
-		background.FillColor = c.backgroundColor
-	}
-
+	text.TextSize = c.FontSize()
+	text.TextStyle = c.textStyle
+	background := canvas.NewRectangle(c.BackgroundColor())
 	return &labelRenderer{
 		label:      c,
 		text:       text,
@@ -80,16 +53,50 @@ func (c *Label) SetFontSize(size float32) *Label {
 	return c
 }
 
+func (c *Label) FontSize() float32 {
+	if c.fontSize <= 0 {
+		return theme.TextSize()
+	}
+
+	return c.fontSize
+}
+
+func (c *Label) SetPadding(p EdgeInset) *Label {
+	c.padding = p
+	c.Refresh()
+	return c
+}
+
+func (c *Label) GetPadding() EdgeInset {
+	return c.padding
+}
+
 func (c *Label) SetColor(color color.Color) *Label {
 	c.foregroundColor = color
 	c.Refresh()
 	return c
 }
 
+func (c *Label) Color() color.Color {
+	if c.foregroundColor == nil {
+		return theme.Color(theme.ColorNameForeground)
+	}
+
+	return c.foregroundColor
+}
+
 func (c *Label) SetBackgroundColor(color color.Color) *Label {
 	c.backgroundColor = color
 	c.Refresh()
 	return c
+}
+
+func (c *Label) BackgroundColor() color.Color {
+	if c.backgroundColor == nil {
+		return theme.Color(theme.ColorNameBackground)
+	}
+
+	return c.backgroundColor
 }
 
 func (c *Label) SetFixedSize(fixedWidth, fixedHeight float32) *Label {
@@ -106,6 +113,16 @@ func (c *Label) SetAlign(align fyne.TextAlign) *Label {
 	return c
 }
 
+func (c *Label) Alignment() fyne.TextAlign {
+	return c.alignment
+}
+
+func (c *Label) SetTextStyle(style fyne.TextStyle) *Label {
+	c.textStyle = style
+	c.Refresh()
+	return c
+}
+
 type labelRenderer struct {
 	label      *Label
 	text       *canvas.Text
@@ -113,22 +130,14 @@ type labelRenderer struct {
 }
 
 func (r *labelRenderer) Layout(size fyne.Size) {
-	fmt.Println("enter  layout：", r.label.alignment)
 	// 根据固定宽度或高度调整文本大小
-	textSize := r.text.MinSize()
-
+	textSize := r.text.MinSize() //文本实际大小
 	if r.label.fixedWidth > 0 {
 		textSize.Width = r.label.fixedWidth
-	} else {
-		// 自动调整宽度以适应文本
-		textSize.Width = r.text.MinSize().Width
 	}
 
 	if r.label.fixedHeight > 0 {
 		textSize.Height = r.label.fixedHeight
-	} else {
-		// 自动调整高度以适应文本
-		textSize.Height = r.text.MinSize().Height
 	}
 
 	r.text.Resize(textSize)
@@ -153,42 +162,26 @@ func (r *labelRenderer) MinSize() fyne.Size {
 	if r.label.fixedWidth > 0 {
 		textSize.Width = r.label.fixedWidth
 	} else {
-		// 自适应宽度
-		textSize.Width = r.text.MinSize().Width
+		textSize.Width += r.label.padding.Left + r.label.padding.Right
 	}
 
 	if r.label.fixedHeight > 0 {
 		textSize.Height = r.label.fixedHeight
 	} else {
-		// 自适应高度
-		textSize.Height = r.text.MinSize().Height
+		textSize.Height += r.label.padding.Top + r.label.padding.Bottom
 	}
 
-	return fyne.NewSize(textSize.Width+10, textSize.Height+10) // 增加一些填充以适应背景
+	return textSize
 }
 
 func (r *labelRenderer) Refresh() {
-	fmt.Println("enter refresh..labelRenderer..")
 	r.text.Text = r.label.title
-	if r.label.foregroundColor != nil {
-		r.text.Color = r.label.foregroundColor
-	} else {
-		r.text.Color = theme.Color(theme.ColorNameBackground)
-	}
+	r.text.Color = r.label.Color()
+	r.text.TextSize = r.label.FontSize()
+	r.text.Alignment = r.label.Alignment()
+	r.text.TextStyle = r.label.textStyle
+	r.background.FillColor = r.label.BackgroundColor()
 
-	if r.label.backgroundColor != nil {
-		r.background.FillColor = r.label.backgroundColor
-	} else {
-		r.background.FillColor = theme.Color(theme.ColorNameBackground)
-	}
-
-	if r.label.fontSize > 0 {
-		r.text.TextSize = r.label.fontSize
-	} else {
-		r.text.TextSize = theme.TextSize()
-	}
-
-	r.text.Alignment = r.label.alignment
 	r.background.Refresh()
 	r.text.Refresh()
 }
