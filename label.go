@@ -144,13 +144,13 @@ func (r *labelRenderer) Layout(size fyne.Size) {
 	r.background.Resize(size)
 	switch r.label.alignment {
 	case fyne.TextAlignCenter:
-		r.text.Move(fyne.NewPos((size.Width-textSize.Width)/2, (size.Height-textSize.Height)/2))
+		r.text.Move(ChildPosition(Center, size, textSize))
 		break
 	case fyne.TextAlignTrailing:
-		r.text.Move(fyne.NewPos(size.Width-textSize.Width, (size.Height-textSize.Height)/2))
+		r.text.Move(ChildPosition(CenterRight, size, textSize))
 		break
 	default: // fyne.TextAlignLeading
-		r.text.Move(fyne.NewPos(0, (size.Height-textSize.Height)/2))
+		r.text.Move(ChildPosition(CenterLeft, size, textSize))
 		break
 	}
 }
