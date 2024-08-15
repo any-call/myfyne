@@ -1,6 +1,9 @@
 package myfyne
 
-import "fyne.io/fyne/v2"
+import (
+	"fyne.io/fyne/v2"
+	"math"
+)
 
 type (
 	EdgeInset struct {
@@ -35,3 +38,7 @@ func containsObject(root, obj fyne.CanvasObject) bool {
 	}
 	return false
 }
+
+const (
+	Infinity float32 = math.MaxFloat32 //代表无穷大，一般表示可以尽可能的占用父类的空间
+)
