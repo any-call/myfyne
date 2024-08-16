@@ -47,30 +47,47 @@ func ChildPosition(position Position, parentSize, childSize fyne.Size) fyne.Posi
 	switch position {
 	case TopLeft:
 		x, y = 0, 0
+		break
+
 	case TopCenter:
 		x = (parentSize.Width - childSize.Width) / 2
 		y = 0
+		break
+
 	case TopRight:
 		x = parentSize.Width - childSize.Width
 		y = 0
+		break
+
 	case CenterLeft:
 		x = 0
 		y = (parentSize.Height - childSize.Height) / 2
+		break
+
 	case Center:
 		x = (parentSize.Width - childSize.Width) / 2
 		y = (parentSize.Height - childSize.Height) / 2
+		break
+
 	case CenterRight:
 		x = parentSize.Width - childSize.Width
 		y = (parentSize.Height - childSize.Height) / 2
+		break
+
 	case BottomLeft:
 		x = 0
 		y = parentSize.Height - childSize.Height
+		break
+
 	case BottomCenter:
 		x = (parentSize.Width - childSize.Width) / 2
 		y = parentSize.Height - childSize.Height
+		break
+
 	case BottomRight:
 		x = parentSize.Width - childSize.Width
 		y = parentSize.Height - childSize.Height
+		break
 	}
 
 	return fyne.NewPos(x, y)
