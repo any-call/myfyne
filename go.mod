@@ -2,10 +2,7 @@ module github.com/any-call/myfyne
 
 go 1.22.2
 
-require (
-	fyne.io/fyne/v2 v2.5.0
-	github.com/any-call/gobase v1.10.2
-)
+require fyne.io/fyne/v2 v2.5.0
 
 require (
 	github.com/fredbi/uri v1.1.0 // indirect
