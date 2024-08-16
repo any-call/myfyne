@@ -16,8 +16,7 @@ type (
 		Content() fyne.CanvasObject
 		WinTitle() string
 		WinID() int
-		WinWidth() float32
-		WinHeight() float32
+		WinSize() fyne.Size
 	}
 )
 

@@ -50,12 +50,7 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool) {
 	window, exists := wm.windows[windowID]
 	if !exists {
 		// 创建新窗口
-		window = wm.app.NewWindow(page.WinTitle())
-		if page.WinWidth() > 0 && page.WinHeight() > 0 {
-			window.Resize(fyne.NewSize(page.WinWidth(), page.WinHeight()))
-		} else {
-			window.Resize(page.Content().MinSize())
-		}
+		window = wm.app.NewWindow("")
 		wm.windows[windowID] = window
 	}
 
@@ -63,12 +58,16 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool) {
 	window.SetContent(page.Content())
 	window.SetTitle(page.WinTitle())
 
-	if page.WinWidth() > 0 && page.WinHeight() > 0 {
-		window.Resize(fyne.NewSize(page.WinWidth(), page.WinHeight()))
-	} else {
-		window.Resize(page.Content().MinSize())
+	winSize := page.WinSize()
+	if winSize.Width <= 0 {
+		winSize.Width = page.Content().MinSize().Width
 	}
 
+	if winSize.Height <= 0 {
+		winSize.Height = page.Content().MinSize().Height
+	}
+
+	window.Resize(winSize)
 	if centerOnScreen {
 		window.CenterOnScreen()
 	}
