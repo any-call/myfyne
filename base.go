@@ -14,10 +14,10 @@ type (
 
 	Page interface {
 		Content() fyne.CanvasObject
-		Title() string
-		WindowID() int
-		WindowWidth() float32
-		WindowHeight() float32
+		WinTitle() string
+		WinID() int
+		WinWidth() float32
+		WinHeight() float32
 	}
 )
 

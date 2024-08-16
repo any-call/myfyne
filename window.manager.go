@@ -44,15 +44,15 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool) {
 		panic("App instance not set. Use SetApp to initialize.")
 	}
 
-	windowID := page.WindowID()
+	windowID := page.WinID()
 
 	// 检查窗口是否已经存在
 	window, exists := wm.windows[windowID]
 	if !exists {
 		// 创建新窗口
-		window = wm.app.NewWindow(page.Title())
-		if page.WindowWidth() > 0 && page.WindowHeight() > 0 {
-			window.Resize(fyne.NewSize(page.WindowWidth(), page.WindowHeight()))
+		window = wm.app.NewWindow(page.WinTitle())
+		if page.WinWidth() > 0 && page.WinHeight() > 0 {
+			window.Resize(fyne.NewSize(page.WinWidth(), page.WinHeight()))
 		} else {
 			window.Resize(page.Content().MinSize())
 		}
@@ -61,10 +61,10 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool) {
 
 	// 设置页面内容并调整窗口大小
 	window.SetContent(page.Content())
-	window.SetTitle(page.Title())
+	window.SetTitle(page.WinTitle())
 
-	if page.WindowWidth() > 0 && page.WindowHeight() > 0 {
-		window.Resize(fyne.NewSize(page.WindowWidth(), page.WindowHeight()))
+	if page.WinWidth() > 0 && page.WinHeight() > 0 {
+		window.Resize(fyne.NewSize(page.WinWidth(), page.WinHeight()))
 	} else {
 		window.Resize(page.Content().MinSize())
 	}
@@ -85,7 +85,7 @@ func (wm *windowManager) ClosePage(page Page) {
 		panic("App instance not set. Use SetApp to initialize.")
 	}
 
-	windowID := page.WindowID()
+	windowID := page.WinID()
 	if window, exists := wm.windows[windowID]; exists {
 		window.Close()
 		delete(wm.windows, windowID)
@@ -97,7 +97,7 @@ func (wm *windowManager) GetWindow(page Page) fyne.Window {
 	wm.mutex.Lock()
 	defer wm.mutex.Unlock()
 
-	return wm.windows[page.WindowID()]
+	return wm.windows[page.WinID()]
 }
 
 // ShowWindow 显示指定页面的窗口
