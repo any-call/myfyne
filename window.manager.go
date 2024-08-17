@@ -36,7 +36,7 @@ func (wm *windowManager) SetApp(app fyne.App) {
 }
 
 // ShowPage 显示页面，如果窗口不存在，则创建并显示
-func (wm *windowManager) ShowPage(page Page, centerOnScreen bool) {
+func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool) {
 	wm.mutex.Lock()
 	defer wm.mutex.Unlock()
 
@@ -71,6 +71,8 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool) {
 	if centerOnScreen {
 		window.CenterOnScreen()
 	}
+
+	window.SetFixedSize(fixedSize)
 
 	window.Show()
 }
