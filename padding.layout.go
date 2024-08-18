@@ -6,6 +6,28 @@ type LayoutPadding struct {
 	padding EdgeInset
 }
 
+func NewHPaddingLayout(padding float32) *LayoutPadding {
+	return &LayoutPadding{
+		padding: EdgeInset{
+			Top:    0,
+			Right:  padding,
+			Bottom: 0,
+			Left:   padding,
+		},
+	}
+}
+
+func NewVPaddingLayout(padding float32) *LayoutPadding {
+	return &LayoutPadding{
+		padding: EdgeInset{
+			Top:    padding,
+			Right:  0,
+			Bottom: padding,
+			Left:   0,
+		},
+	}
+}
+
 func NewPaddingLayout(top, bottom, left, right float32) *LayoutPadding {
 	return &LayoutPadding{
 		padding: EdgeInset{
