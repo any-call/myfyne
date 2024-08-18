@@ -126,7 +126,7 @@ func (r *sizedBoxRenderer) Layout(size fyne.Size) {
 		boxSize.Height = size.Height
 	}
 
-	boxPosition := ChildPosition(Center, size, boxSize)
+	boxPosition := ChildPosition(PositionCenter, size, boxSize)
 	r.background.Resize(boxSize)
 	r.background.Move(boxPosition)
 
