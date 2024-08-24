@@ -18,6 +18,14 @@ type SizedBox struct {
 	child      fyne.CanvasObject
 }
 
+func NewFixedWidthBox(width float32, background color.Color, child fyne.CanvasObject) *SizedBox {
+	return NewSizedBox(fyne.NewSize(width, Infinity), background, child)
+}
+
+func NewFixedHeightBox(height float32, background color.Color, child fyne.CanvasObject) *SizedBox {
+	return NewSizedBox(fyne.NewSize(Infinity, height), background, child)
+}
+
 // NewSizedBox 创建一个新的 SizedBox 实例
 func NewSizedBox(size fyne.Size, background color.Color, child fyne.CanvasObject) *SizedBox {
 	box := &SizedBox{
