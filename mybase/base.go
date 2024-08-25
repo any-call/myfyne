@@ -1,4 +1,4 @@
-package myfynebase
+package mybase
 
 import (
 	"fyne.io/fyne/v2"

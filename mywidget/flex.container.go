@@ -3,7 +3,7 @@ package mywidget
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
-	"github.com/any-call/myfyne/myfynebase"
+	"github.com/any-call/myfyne/mybase"
 )
 
 // FlexContainer 是自定义的容器，支持横向和纵向的布局
@@ -11,13 +11,13 @@ type FlexContainer struct {
 	widget.BaseWidget
 
 	isHorizontal       bool
-	mainAxisAlignment  myfynebase.MainAxisAlignment
-	crossAxisAlignment myfynebase.CrossAxisAlignment
+	mainAxisAlignment  mybase.MainAxisAlignment
+	crossAxisAlignment mybase.CrossAxisAlignment
 	items              []fyne.CanvasObject
 }
 
 // NewRow 创建一个新的横向布局容器
-func NewRow(mainAxisalignment myfynebase.MainAxisAlignment, crossAxisAlignment myfynebase.CrossAxisAlignment, items ...fyne.CanvasObject) *FlexContainer {
+func NewRow(mainAxisalignment mybase.MainAxisAlignment, crossAxisAlignment mybase.CrossAxisAlignment, items ...fyne.CanvasObject) *FlexContainer {
 	container := &FlexContainer{
 		isHorizontal:       true,
 		mainAxisAlignment:  mainAxisalignment,
@@ -29,7 +29,7 @@ func NewRow(mainAxisalignment myfynebase.MainAxisAlignment, crossAxisAlignment m
 }
 
 // NewColumn 创建一个新的纵向布局容器
-func NewColumn(mainAxisalignment myfynebase.MainAxisAlignment, crossAxisAlignment myfynebase.CrossAxisAlignment, items ...fyne.CanvasObject) *FlexContainer {
+func NewColumn(mainAxisalignment mybase.MainAxisAlignment, crossAxisAlignment mybase.CrossAxisAlignment, items ...fyne.CanvasObject) *FlexContainer {
 	container := &FlexContainer{
 		isHorizontal:       false,
 		mainAxisAlignment:  mainAxisalignment,
@@ -81,25 +81,25 @@ func (r *flexContainerRenderer) layoutHorizontal(size fyne.Size) {
 	itemCount := len(r.container.items)
 
 	switch r.container.mainAxisAlignment {
-	case myfynebase.MainAxisAlignSpaceBetween:
+	case mybase.MainAxisAlignSpaceBetween:
 		if itemCount > 1 {
 			spacing = remainingWidth / float32(itemCount-1)
 		}
-	case myfynebase.MainAxisAlignSpaceAround:
+	case mybase.MainAxisAlignSpaceAround:
 		if itemCount > 0 {
 			spacing = remainingWidth / float32(itemCount)
 			startX = spacing / 2
 		}
-	case myfynebase.MainAxisAlignSpaceEvenly:
+	case mybase.MainAxisAlignSpaceEvenly:
 		if itemCount > 0 {
 			spacing = remainingWidth / float32(itemCount+1)
 			startX = spacing
 		}
-	case myfynebase.MainAxisAlignCenter:
+	case mybase.MainAxisAlignCenter:
 		startX = remainingWidth / 2
-	case myfynebase.MainAxisAlignEnd:
+	case mybase.MainAxisAlignEnd:
 		startX = remainingWidth
-	case myfynebase.MainAxisAlignStart:
+	case mybase.MainAxisAlignStart:
 		startX = 0
 	default:
 		startX = 0
@@ -116,22 +116,22 @@ func (r *flexContainerRenderer) layoutHorizontal(size fyne.Size) {
 	// 重新布局所有子控件，应用对齐方式
 	for _, item := range r.container.items {
 		switch r.container.crossAxisAlignment {
-		case myfynebase.CrossAxisAlignStretch:
+		case mybase.CrossAxisAlignStretch:
 			item.Resize(fyne.NewSize(item.MinSize().Width, size.Height))
 			item.Move(fyne.NewPos(startX, 0))
 			break
 
-		case myfynebase.CrossAxisAlignStart:
+		case mybase.CrossAxisAlignStart:
 			item.Resize(item.MinSize())
 			item.Move(fyne.NewPos(startX, 0))
 			break
 
-		case myfynebase.CrossAxisAlignEnd:
+		case mybase.CrossAxisAlignEnd:
 			item.Resize(item.MinSize())
 			item.Move(fyne.NewPos(startX, size.Height-item.Size().Height))
 			break
 
-		case myfynebase.CrossAxisAlignCenter:
+		case mybase.CrossAxisAlignCenter:
 			item.Resize(item.MinSize())
 			item.Move(fyne.NewPos(startX, (size.Height-item.Size().Height)/2))
 			break
@@ -162,25 +162,25 @@ func (r *flexContainerRenderer) layoutVertical(size fyne.Size) {
 	itemCount := len(r.container.items)
 
 	switch r.container.mainAxisAlignment {
-	case myfynebase.MainAxisAlignSpaceBetween:
+	case mybase.MainAxisAlignSpaceBetween:
 		if itemCount > 1 {
 			spacing = remainingHeight / float32(itemCount-1)
 		}
-	case myfynebase.MainAxisAlignSpaceAround:
+	case mybase.MainAxisAlignSpaceAround:
 		if itemCount > 0 {
 			spacing = remainingHeight / float32(itemCount)
 			startY = spacing / 2
 		}
-	case myfynebase.MainAxisAlignSpaceEvenly:
+	case mybase.MainAxisAlignSpaceEvenly:
 		if itemCount > 0 {
 			spacing = remainingHeight / float32(itemCount+1)
 			startY = spacing
 		}
-	case myfynebase.MainAxisAlignCenter:
+	case mybase.MainAxisAlignCenter:
 		startY = remainingHeight / 2
-	case myfynebase.MainAxisAlignEnd:
+	case mybase.MainAxisAlignEnd:
 		startY = remainingHeight
-	case myfynebase.MainAxisAlignStart:
+	case mybase.MainAxisAlignStart:
 		startY = 0
 	default:
 		startY = 0
@@ -189,22 +189,22 @@ func (r *flexContainerRenderer) layoutVertical(size fyne.Size) {
 	// 重新布局所有子控件，应用对齐方式
 	for _, item := range r.container.items {
 		switch r.container.crossAxisAlignment {
-		case myfynebase.CrossAxisAlignStretch:
+		case mybase.CrossAxisAlignStretch:
 			item.Resize(fyne.NewSize(size.Width, item.MinSize().Height))
 			item.Move(fyne.NewPos(0, startY))
 			break
 
-		case myfynebase.CrossAxisAlignStart:
+		case mybase.CrossAxisAlignStart:
 			item.Resize(item.MinSize())
 			item.Move(fyne.NewPos(0, startY))
 			break
 
-		case myfynebase.CrossAxisAlignEnd:
+		case mybase.CrossAxisAlignEnd:
 			item.Resize(item.MinSize())
 			item.Move(fyne.NewPos(size.Width-item.Size().Width, startY))
 			break
 
-		case myfynebase.CrossAxisAlignCenter:
+		case mybase.CrossAxisAlignCenter:
 			item.Resize(item.MinSize())
 			item.Move(fyne.NewPos((size.Width-item.Size().Width)/2, startY))
 			break

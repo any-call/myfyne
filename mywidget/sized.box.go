@@ -5,7 +5,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/any-call/myfyne/myfynebase"
+	"github.com/any-call/myfyne/mybase"
 	"image/color"
 )
 
@@ -14,17 +14,17 @@ type SizedBox struct {
 	widget.BaseWidget
 	width      float32
 	height     float32
-	padding    myfynebase.EdgeInset
+	padding    mybase.EdgeInset
 	background color.Color
 	child      fyne.CanvasObject
 }
 
 func NewFixedWidthBox(width float32, background color.Color, child fyne.CanvasObject) *SizedBox {
-	return NewSizedBox(fyne.NewSize(width, myfynebase.Infinity), background, child)
+	return NewSizedBox(fyne.NewSize(width, mybase.Infinity), background, child)
 }
 
 func NewFixedHeightBox(height float32, background color.Color, child fyne.CanvasObject) *SizedBox {
-	return NewSizedBox(fyne.NewSize(myfynebase.Infinity, height), background, child)
+	return NewSizedBox(fyne.NewSize(mybase.Infinity, height), background, child)
 }
 
 // NewSizedBox 创建一个新的 SizedBox 实例
@@ -52,16 +52,16 @@ func (b *SizedBox) GetWidth() float32 {
 		return b.width
 	}
 
-	return myfynebase.Infinity
+	return mybase.Infinity
 }
 
-func (b *SizedBox) SetPadding(padding myfynebase.EdgeInset) *SizedBox {
+func (b *SizedBox) SetPadding(padding mybase.EdgeInset) *SizedBox {
 	b.padding = padding
 	b.Refresh()
 	return b
 }
 
-func (b *SizedBox) GetPadding() myfynebase.EdgeInset {
+func (b *SizedBox) GetPadding() mybase.EdgeInset {
 	return b.padding
 }
 
@@ -78,7 +78,7 @@ func (b *SizedBox) GetHeight() float32 {
 		return b.height
 	}
 
-	return myfynebase.Infinity
+	return mybase.Infinity
 }
 
 // SetBackgroundColor 设置背景色
@@ -127,15 +127,15 @@ type sizedBoxRenderer struct {
 
 func (r *sizedBoxRenderer) Layout(size fyne.Size) {
 	boxSize := r.MinSize()
-	if r.box.width == myfynebase.Infinity {
+	if r.box.width == mybase.Infinity {
 		boxSize.Width = size.Width
 	}
 
-	if r.box.height == myfynebase.Infinity {
+	if r.box.height == mybase.Infinity {
 		boxSize.Height = size.Height
 	}
 
-	boxPosition := myfynebase.ChildPosition(myfynebase.PositionCenter, size, boxSize)
+	boxPosition := mybase.ChildPosition(mybase.PositionCenter, size, boxSize)
 	r.background.Resize(boxSize)
 	r.background.Move(boxPosition)
 
@@ -155,14 +155,14 @@ func (r *sizedBoxRenderer) Layout(size fyne.Size) {
 
 func (r *sizedBoxRenderer) MinSize() fyne.Size {
 	ret := fyne.NewSize(r.box.GetWidth(), r.box.GetHeight())
-	if ret.Width == myfynebase.Infinity {
+	if ret.Width == mybase.Infinity {
 		ret.Width = r.box.padding.Left + r.box.padding.Right
 		if r.box.child != nil {
 			ret.Width += r.box.child.MinSize().Width
 		}
 	}
 
-	if ret.Height == myfynebase.Infinity {
+	if ret.Height == mybase.Infinity {
 		ret.Height = r.box.padding.Top + r.box.padding.Bottom
 		if r.box.child != nil {
 			ret.Height += r.box.child.MinSize().Height

@@ -5,7 +5,7 @@ import (
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"github.com/any-call/myfyne/myfynebase"
+	"github.com/any-call/myfyne/mybase"
 	"image/color"
 )
 
@@ -17,9 +17,9 @@ type Label struct {
 	fontSize        float32
 	alignment       fyne.TextAlign
 	textStyle       fyne.TextStyle
-	fixedWidth      float32              //<=0 则说明是自适应的宽
-	fixedHeight     float32              //<=0 则说明是自适应的高
-	padding         myfynebase.EdgeInset //定义内间距
+	fixedWidth      float32          //<=0 则说明是自适应的宽
+	fixedHeight     float32          //<=0 则说明是自适应的高
+	padding         mybase.EdgeInset //定义内间距
 }
 
 func NewLabel(text string) *Label {
@@ -62,13 +62,13 @@ func (c *Label) FontSize() float32 {
 	return c.fontSize
 }
 
-func (c *Label) SetPadding(p myfynebase.EdgeInset) *Label {
+func (c *Label) SetPadding(p mybase.EdgeInset) *Label {
 	c.padding = p
 	c.Refresh()
 	return c
 }
 
-func (c *Label) GetPadding() myfynebase.EdgeInset {
+func (c *Label) GetPadding() mybase.EdgeInset {
 	return c.padding
 }
 
@@ -145,13 +145,13 @@ func (r *labelRenderer) Layout(size fyne.Size) {
 	r.background.Resize(size)
 	switch r.label.alignment {
 	case fyne.TextAlignCenter:
-		r.text.Move(myfynebase.ChildPosition(myfynebase.PositionCenter, size, textSize))
+		r.text.Move(mybase.ChildPosition(mybase.PositionCenter, size, textSize))
 		break
 	case fyne.TextAlignTrailing:
-		r.text.Move(myfynebase.ChildPosition(myfynebase.PositionCenterRight, size, textSize))
+		r.text.Move(mybase.ChildPosition(mybase.PositionCenterRight, size, textSize))
 		break
 	default: // fyne.TextAlignLeading
-		r.text.Move(myfynebase.ChildPosition(myfynebase.PositionCenterLeft, size, textSize))
+		r.text.Move(mybase.ChildPosition(mybase.PositionCenterLeft, size, textSize))
 		break
 	}
 }
