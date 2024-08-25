@@ -16,6 +16,13 @@ type (
 		WinID() int
 		WinSize() fyne.Size
 	}
+
+	// MenuItem 定义菜单项的结构
+	MenuItem struct {
+		Name     string
+		Icon     fyne.Resource
+		SubItems []MenuItem
+	}
 )
 
 // MainAxisAlignment 定义了主轴对齐方式

@@ -5,27 +5,21 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"github.com/any-call/myfyne"
 )
-
-// MenuItem 定义菜单项的结构
-type MenuItem struct {
-	Name     string
-	Icon     fyne.Resource
-	SubItems []MenuItem
-}
 
 // SideMenu 定义自定义组件
 type SideMenu struct {
 	widget.BaseWidget
-	menuItems      []MenuItem
-	onItemSelected func(MenuItem)
+	menuItems      []myfyne.MenuItem
+	onItemSelected func(myfyne.MenuItem)
 	alignment      fyne.TextAlign
 	padding        float32
 	accordion      *widget.Accordion
 }
 
 // NewSideMenu 创建一个新的 SideMenu 控件
-func NewSideMenu(menuItems []MenuItem, onItemSelected func(MenuItem)) *SideMenu {
+func NewSideMenu(menuItems []myfyne.MenuItem, onItemSelected func(myfyne.MenuItem)) *SideMenu {
 	sideMenu := &SideMenu{
 		menuItems:      menuItems,
 		alignment:      fyne.TextAlignLeading,
@@ -64,7 +58,7 @@ func (sm *SideMenu) refreshMenuItems() {
 }
 
 // createSubMenu 创建子菜单，支持无限嵌套并设置左侧缩进
-func (sm *SideMenu) createSubMenu(item MenuItem, level int) *fyne.Container {
+func (sm *SideMenu) createSubMenu(item myfyne.MenuItem, level int) *fyne.Container {
 	subMenuList := container.NewVBox()
 
 	for _, subItem := range item.SubItems {
@@ -74,8 +68,7 @@ func (sm *SideMenu) createSubMenu(item MenuItem, level int) *fyne.Container {
 		})
 
 		// 根据 alignment 设置对齐方式，并增加 left padding
-		leftPadding := widget.NewLabel("")
-		leftPadding.Resize(fyne.NewSize(sm.padding*float32(level), btn.MinSize().Height))
+		leftPadding := NewFixedWidthBox(sm.padding, nil, nil)
 		paddingContainer := container.NewHBox(leftPadding, btn)
 
 		switch sm.alignment {
@@ -119,12 +112,12 @@ func (sm *SideMenu) SetLeftPadding(padding float32) *SideMenu {
 }
 
 // AddMenuItem 动态增加一个菜单项
-func (sm *SideMenu) AddMenu(item MenuItem) {
+func (sm *SideMenu) AddMenu(item myfyne.MenuItem) {
 	sm.menuItems = append(sm.menuItems, item)
 	sm.refreshMenuItems()
 }
 
-func (sm *SideMenu) AddSubMenu(parItem MenuItem, subItem MenuItem) {
+func (sm *SideMenu) AddSubMenu(parItem myfyne.MenuItem, subItem myfyne.MenuItem) {
 	for i, item := range sm.menuItems {
 		if item.Name == parItem.Name {
 			sm.menuItems[i].SubItems = append(sm.menuItems[i].SubItems, subItem)
