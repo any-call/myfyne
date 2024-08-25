@@ -1,4 +1,4 @@
-package myfyne
+package mywidget
 
 import (
 	"fyne.io/fyne/v2"

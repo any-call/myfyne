@@ -1,14 +1,17 @@
-package myfyne
+package mylayout
 
-import "fyne.io/fyne/v2"
+import (
+	"fyne.io/fyne/v2"
+	"github.com/any-call/myfyne/myfynebase"
+)
 
 type LayoutPadding struct {
-	padding EdgeInset
+	padding myfynebase.EdgeInset
 }
 
 func NewHPaddingLayout(padding float32) *LayoutPadding {
 	return &LayoutPadding{
-		padding: EdgeInset{
+		padding: myfynebase.EdgeInset{
 			Top:    0,
 			Right:  padding,
 			Bottom: 0,
@@ -19,7 +22,7 @@ func NewHPaddingLayout(padding float32) *LayoutPadding {
 
 func NewVPaddingLayout(padding float32) *LayoutPadding {
 	return &LayoutPadding{
-		padding: EdgeInset{
+		padding: myfynebase.EdgeInset{
 			Top:    padding,
 			Right:  0,
 			Bottom: padding,
@@ -30,7 +33,7 @@ func NewVPaddingLayout(padding float32) *LayoutPadding {
 
 func NewPaddingLayout(top, bottom, left, right float32) *LayoutPadding {
 	return &LayoutPadding{
-		padding: EdgeInset{
+		padding: myfynebase.EdgeInset{
 			Top:    top,
 			Right:  right,
 			Bottom: bottom,
