@@ -1,4 +1,4 @@
-package myfyneKit
+package myfyne
 
 import (
 	"fyne.io/fyne/v2"
