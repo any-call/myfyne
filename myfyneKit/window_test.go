@@ -1,4 +1,4 @@
-package mybase
+package myfyneKit
 
 import "testing"
 
