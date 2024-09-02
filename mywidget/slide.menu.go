@@ -6,16 +6,20 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/any-call/myfyne"
+	"image/color"
 )
 
 // SideMenu 定义自定义组件
 type SideMenu struct {
 	widget.BaseWidget
-	menuItems      []myfyne.MenuItem
-	onItemSelected func(myfyne.MenuItem)
-	alignment      fyne.TextAlign
-	padding        float32
-	accordion      *widget.Accordion
+	menuItems       []myfyne.MenuItem
+	onItemSelected  func(myfyne.MenuItem)
+	alignment       fyne.TextAlign
+	padding         float32
+	accordion       *widget.Accordion
+	textColor       color.Color
+	selectTextColor color.Color
+	hoverTextColor  color.Color
 }
 
 // NewSideMenu 创建一个新的 SideMenu 控件
@@ -63,9 +67,13 @@ func (sm *SideMenu) createSubMenu(item myfyne.MenuItem, level int) *fyne.Contain
 
 	for _, subItem := range item.SubItems {
 		subItemCopy := subItem // 避免闭包引用错误
-		btn := widget.NewButton(subItem.Name, func() {
-			sm.onItemSelected(subItemCopy)
+		btn := NewMenuButton(subItem.Name, func() {
+			if sm.onItemSelected != nil {
+				sm.onItemSelected(subItemCopy)
+			}
 		})
+
+		btn.SetTextColor(sm.textColor).SetSelectTextColor(sm.selectTextColor).SetHoverTextColor(sm.hoverTextColor)
 
 		// 根据 alignment 设置对齐方式，并增加 left padding
 		leftPadding := NewFixedWidthBox(sm.padding, nil, nil)
@@ -107,6 +115,24 @@ func (sm *SideMenu) SetAlignment(alignment fyne.TextAlign) *SideMenu {
 
 func (sm *SideMenu) SetLeftPadding(padding float32) *SideMenu {
 	sm.padding = padding
+	sm.refreshMenuItems()
+	return sm
+}
+
+func (sm *SideMenu) SetTextColor(c color.Color) *SideMenu {
+	sm.textColor = c
+	sm.refreshMenuItems()
+	return sm
+}
+
+func (sm *SideMenu) SetHoverTextColor(c color.Color) *SideMenu {
+	sm.hoverTextColor = c
+	sm.refreshMenuItems()
+	return sm
+}
+
+func (sm *SideMenu) SetSelectTextColor(c color.Color) *SideMenu {
+	sm.selectTextColor = c
 	sm.refreshMenuItems()
 	return sm
 }
