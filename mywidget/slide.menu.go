@@ -1,6 +1,7 @@
 package mywidget
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
@@ -80,9 +81,11 @@ func (sm *SideMenu) createSubMenu(item myfyne.MenuItem, level int) *fyne.Contain
 			SetIsSelected(false)
 
 		if sm.selectMenuItem != nil {
+			fmt.Println("select menu item:", sm.selectMenuItem.Name)
 			if subItemCopy.Name == sm.selectMenuItem.Name &&
 				len(subItemCopy.SubItems) == len(sm.selectMenuItem.SubItems) {
 				btn.SetIsSelected(true)
+				fmt.Println("menu item:", sm.selectMenuItem.Name, " ; true")
 			}
 		}
 		// 根据 alignment 设置对齐方式，并增加 left padding

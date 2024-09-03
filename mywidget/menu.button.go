@@ -143,6 +143,27 @@ func (b *MenuButton) GetSelectedTextColor() color.Color {
 	return theme.Color(theme.ColorNameForeground)
 }
 
+func (b *MenuButton) GetBgColor() color.Color {
+	if b.bgColor != nil {
+		return b.bgColor
+	}
+	return theme.Color(theme.ColorNameBackground)
+}
+
+func (b *MenuButton) GetSelectedBgColor() color.Color {
+	if b.selectedBgColor != nil {
+		return b.selectedBgColor
+	}
+	return theme.Color(theme.ColorNameBackground)
+}
+
+func (b *MenuButton) GetHoverBgColor() color.Color {
+	if b.hoverBgColor != nil {
+		return b.hoverBgColor
+	}
+	return theme.Color(theme.ColorNameBackground)
+}
+
 // GetTextSize 获取文本的字体大小
 func (b *MenuButton) GetTextSize() float32 {
 	if b.textSize != nil {
@@ -206,14 +227,12 @@ func (b *MenuButton) getTextColor() color.Color {
 }
 
 func (b *MenuButton) getBackgroundColor() color.Color {
-	if b.isSelected && b.selectedBgColor != nil {
-		return b.selectedBgColor
-	} else if b.isHovered && b.hoverBgColor != nil {
-		return b.hoverBgColor
-	} else if b.bgColor != nil {
-		return b.bgColor
+	if b.isSelected {
+		return b.GetSelectedBgColor()
+	} else if b.isHovered {
+		return b.GetHoverBgColor()
 	}
-	return theme.Color(theme.ColorNameBackground)
+	return b.GetBgColor()
 }
 
 // menuButtonRenderer 实现控件的渲染器
@@ -254,10 +273,6 @@ func (r *menuButtonRenderer) Refresh() {
 	r.label.TextSize = r.button.GetTextSize()
 	r.label.Alignment = r.button.GetTextAlign()
 	canvas.Refresh(r.button)
-}
-
-func (r *menuButtonRenderer) BackgroundColor() color.Color {
-	return theme.Color(theme.ColorNameBackground)
 }
 
 func (r *menuButtonRenderer) Objects() []fyne.CanvasObject {
