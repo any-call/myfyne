@@ -73,7 +73,8 @@ func (sm *SideMenu) createSubMenu(item myfyne.MenuItem, level int) *fyne.Contain
 			}
 		})
 
-		btn.SetTextColor(sm.textColor).SetSelectTextColor(sm.selectTextColor).SetHoverTextColor(sm.hoverTextColor)
+		btn.SetTextColor(sm.textColor).SetSelectedTextColor(sm.selectTextColor).SetHoverTextColor(sm.hoverTextColor).
+			SetTextAlign(fyne.TextAlignLeading)
 
 		// 根据 alignment 设置对齐方式，并增加 left padding
 		leftPadding := NewFixedWidthBox(sm.padding, nil, nil)

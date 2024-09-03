@@ -16,129 +16,130 @@ type MenuButton struct {
 	OnClick           func()
 	isSelected        bool
 	isHovered         bool
-	textSize          float32
-	textColor         *color.Color
-	hoverTextColor    *color.Color
-	selectedTextColor *color.Color
-	bgColor           *color.Color
-	hoverBgColor      *color.Color
-	selectedBgColor   *color.Color
+	textColor         color.Color
+	hoverTextColor    color.Color
+	selectedTextColor color.Color
+	bgColor           color.Color
+	hoverBgColor      color.Color
+	selectedBgColor   color.Color
+	textSize          *float32
+	textAlign         fyne.TextAlign
 }
 
 // NewMenuButton 创建一个新的 MenuButton
 func NewMenuButton(text string, onClick func()) *MenuButton {
 	button := &MenuButton{
-		Text:    text,
-		OnClick: onClick,
+		Text:      text,
+		OnClick:   onClick,
+		textAlign: fyne.TextAlignCenter, // 默认对齐方式
 	}
 	button.ExtendBaseWidget(button)
 	return button
 }
 
-// SetNormalColors 设置正常状态的字体颜色和背景颜色
-func (b *MenuButton) SetTextColor(textColor color.Color) *MenuButton {
-	b.textColor = &textColor
+// SetTextColor 设置正常状态的字体颜色
+func (b *MenuButton) SetTextColor(c color.Color) *MenuButton {
+	b.textColor = c
 	b.Refresh()
 	return b
 }
 
-func (b *MenuButton) SetHoverTextColor(textColor color.Color) *MenuButton {
-	b.hoverTextColor = &textColor
+// SetBgColor 设置正常状态的背景颜色
+func (b *MenuButton) SetBgColor(c color.Color) *MenuButton {
+	b.bgColor = c
 	b.Refresh()
 	return b
 }
 
-func (b *MenuButton) SetSelectTextColor(textColor color.Color) *MenuButton {
-	b.selectedTextColor = &textColor
+// SetHoverTextColor 设置 Hover 状态的字体颜色
+func (b *MenuButton) SetHoverTextColor(c color.Color) *MenuButton {
+	b.hoverTextColor = c
 	b.Refresh()
 	return b
 }
 
-func (b *MenuButton) SetBgColor(textColor color.Color) *MenuButton {
-	b.bgColor = &textColor
+// SetHoverBgColor 设置 Hover 状态的背景颜色
+func (b *MenuButton) SetHoverBgColor(c color.Color) *MenuButton {
+	b.hoverBgColor = c
 	b.Refresh()
 	return b
 }
 
-func (b *MenuButton) SetHoverBgColor(textColor color.Color) *MenuButton {
-	b.hoverBgColor = &textColor
+// SetSelectedTextColor 设置选中状态的字体颜色
+func (b *MenuButton) SetSelectedTextColor(c color.Color) *MenuButton {
+	b.selectedTextColor = c
 	b.Refresh()
 	return b
 }
 
-func (b *MenuButton) SetSelectBgColor(textColor color.Color) *MenuButton {
-	b.selectedBgColor = &textColor
+// SetSelectedBgColor 设置选中状态的背景颜色
+func (b *MenuButton) SetSelectedBgColor(c color.Color) *MenuButton {
+	b.selectedBgColor = c
 	b.Refresh()
 	return b
 }
 
+// SetTextSize 设置文本的字体大小
 func (b *MenuButton) SetTextSize(size float32) *MenuButton {
-	b.textSize = size
+	b.textSize = &size
 	b.Refresh()
 	return b
 }
 
-func (b *MenuButton) SetSelectState(flag bool) *MenuButton {
-	b.isSelected = flag
+// SetTextAlign 设置文本对齐方式
+func (b *MenuButton) SetTextAlign(align fyne.TextAlign) *MenuButton {
+	b.textAlign = align
 	b.Refresh()
 	return b
 }
 
+// SetIsSelected 设置按钮的选中状态
+func (b *MenuButton) SetIsSelected(selected bool) *MenuButton {
+	b.isSelected = selected
+	b.Refresh()
+	return b
+}
+
+// GetIsSelected 获取按钮的选中状态
+func (b *MenuButton) GetIsSelected() bool {
+	return b.isSelected
+}
+
+// GetTextColor 获取正常状态的字体颜色
 func (b *MenuButton) GetTextColor() color.Color {
 	if b.textColor != nil {
-		return *b.textColor
+		return b.textColor
 	}
-
 	return theme.Color(theme.ColorNameForeground)
 }
 
+// GetHoverTextColor 获取 Hover 状态的字体颜色
 func (b *MenuButton) GetHoverTextColor() color.Color {
 	if b.hoverTextColor != nil {
-		return *b.hoverTextColor
+		return b.hoverTextColor
 	}
-	return theme.Color(theme.ColorNameHover)
+	return theme.Color(theme.ColorNameForeground)
 }
 
+// GetSelectedTextColor 获取选中状态的字体颜色
 func (b *MenuButton) GetSelectedTextColor() color.Color {
 	if b.selectedTextColor != nil {
-		return *b.selectedTextColor
+		return b.selectedTextColor
 	}
-	return theme.Color(theme.ColorNameSelection)
+	return theme.Color(theme.ColorNameForeground)
 }
 
-func (b *MenuButton) GetBgColor() color.Color {
-	if b.bgColor != nil {
-		return *b.bgColor
-	}
-
-	return theme.Color(theme.ColorNameBackground)
-}
-
-func (b *MenuButton) GetHoverBgColor() color.Color {
-	if b.hoverBgColor != nil {
-		return *b.hoverBgColor
-	}
-
-	return theme.Color(theme.ColorNameBackground)
-}
-
-func (b *MenuButton) GetSelectBgColor() color.Color {
-	if b.selectedBgColor != nil {
-		return *b.selectedBgColor
-	}
-
-	return theme.Color(theme.ColorNameBackground)
-}
-
+// GetTextSize 获取文本的字体大小
 func (b *MenuButton) GetTextSize() float32 {
-	if b.textSize > 0 {
-		return b.textSize
+	if b.textSize != nil {
+		return *b.textSize
 	}
 	return theme.TextSize()
 }
 
-func (b *MenuButton) GetSelectState() bool {
-	return b.isSelected
+// GetTextAlign 获取文本的对齐方式
+func (b *MenuButton) GetTextAlign() fyne.TextAlign {
+	return b.textAlign
 }
 
 // Tapped 实现点击事件
@@ -168,7 +169,8 @@ func (b *MenuButton) MouseMoved(*desktop.MouseEvent) {}
 func (b *MenuButton) CreateRenderer() fyne.WidgetRenderer {
 	background := canvas.NewRectangle(b.getBackgroundColor())
 	label := canvas.NewText(b.Text, b.getTextColor())
-	label.Alignment = fyne.TextAlignLeading
+	label.TextSize = b.GetTextSize()
+	label.Alignment = b.GetTextAlign()
 
 	objects := []fyne.CanvasObject{background, label}
 
@@ -181,21 +183,23 @@ func (b *MenuButton) CreateRenderer() fyne.WidgetRenderer {
 }
 
 func (b *MenuButton) getTextColor() color.Color {
-	if b.isHovered {
-		return b.GetHoverTextColor()
-	} else if b.isSelected {
+	if b.isSelected {
 		return b.GetSelectedTextColor()
+	} else if b.isHovered {
+		return b.GetHoverTextColor()
 	}
-	return b.getTextColor()
+	return b.GetTextColor()
 }
 
 func (b *MenuButton) getBackgroundColor() color.Color {
-	if b.isHovered {
-		return b.GetHoverBgColor()
-	} else if b.isSelected {
-		return b.GetSelectBgColor()
+	if b.isSelected && b.selectedBgColor != nil {
+		return b.selectedBgColor
+	} else if b.isHovered && b.hoverBgColor != nil {
+		return b.hoverBgColor
+	} else if b.bgColor != nil {
+		return b.bgColor
 	}
-	return b.GetBgColor()
+	return theme.Color(theme.ColorNameBackground)
 }
 
 // menuButtonRenderer 实现控件的渲染器
@@ -220,6 +224,7 @@ func (r *menuButtonRenderer) Refresh() {
 	r.background.FillColor = r.button.getBackgroundColor()
 	r.label.Color = r.button.getTextColor()
 	r.label.TextSize = r.button.GetTextSize()
+	r.label.Alignment = r.button.GetTextAlign()
 	canvas.Refresh(r.button)
 }
 
