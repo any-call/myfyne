@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/any-call/myfyne"
 	"image/color"
 )
 
@@ -24,6 +25,7 @@ type MenuButton struct {
 	selectedBgColor   color.Color
 	textSize          *float32
 	textAlign         fyne.TextAlign
+	padding           myfyne.EdgeInset // 新增的 padding 属性
 }
 
 // NewMenuButton 创建一个新的 MenuButton
@@ -91,6 +93,18 @@ func (b *MenuButton) SetTextAlign(align fyne.TextAlign) *MenuButton {
 	b.textAlign = align
 	b.Refresh()
 	return b
+}
+
+// SetPadding 设置按钮内边距
+func (b *MenuButton) SetPadding(p myfyne.EdgeInset) *MenuButton {
+	b.padding = p
+	b.Refresh()
+	return b
+}
+
+// GetPadding 获取按钮内边距
+func (b *MenuButton) GetPadding() myfyne.EdgeInset {
+	return b.padding
 }
 
 // SetIsSelected 设置按钮的选中状态
@@ -211,13 +225,27 @@ type menuButtonRenderer struct {
 }
 
 func (r *menuButtonRenderer) Layout(size fyne.Size) {
+	padding := r.button.GetPadding()
+	labelSize := r.label.MinSize()
+
+	// Adjust label size considering padding
+	labelSize.Width += padding.Left + padding.Right
+	labelSize.Height += padding.Top + padding.Bottom
+
 	r.background.Resize(size)
-	r.label.Resize(size)
-	r.label.Move(fyne.NewPos(0, size.Height/2-r.label.MinSize().Height/2))
+	r.label.Resize(labelSize)
+	r.label.Move(fyne.NewPos(padding.Left, padding.Top))
 }
 
 func (r *menuButtonRenderer) MinSize() fyne.Size {
-	return r.label.MinSize()
+	padding := r.button.GetPadding()
+	labelSize := r.label.MinSize()
+
+	// Calculate min size including padding
+	return fyne.NewSize(
+		labelSize.Width+padding.Left+padding.Right,
+		labelSize.Height+padding.Top+padding.Bottom,
+	)
 }
 
 func (r *menuButtonRenderer) Refresh() {
@@ -226,6 +254,10 @@ func (r *menuButtonRenderer) Refresh() {
 	r.label.TextSize = r.button.GetTextSize()
 	r.label.Alignment = r.button.GetTextAlign()
 	canvas.Refresh(r.button)
+}
+
+func (r *menuButtonRenderer) BackgroundColor() color.Color {
+	return theme.Color(theme.ColorNameBackground)
 }
 
 func (r *menuButtonRenderer) Objects() []fyne.CanvasObject {
