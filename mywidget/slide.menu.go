@@ -20,6 +20,7 @@ type SideMenu struct {
 	textColor       color.Color
 	selectTextColor color.Color
 	hoverTextColor  color.Color
+	selectMenuItem  *myfyne.MenuItem
 }
 
 // NewSideMenu 创建一个新的 SideMenu 控件
@@ -68,14 +69,22 @@ func (sm *SideMenu) createSubMenu(item myfyne.MenuItem, level int) *fyne.Contain
 	for _, subItem := range item.SubItems {
 		subItemCopy := subItem // 避免闭包引用错误
 		btn := NewMenuButton(subItem.Name, func() {
+			sm.selectMenuItem = &subItemCopy
 			if sm.onItemSelected != nil {
 				sm.onItemSelected(subItemCopy)
 			}
 		})
 
 		btn.SetTextColor(sm.textColor).SetSelectedTextColor(sm.selectTextColor).SetHoverTextColor(sm.hoverTextColor).
-			SetTextAlign(fyne.TextAlignLeading).SetPadding(myfyne.EdgeInset{Left: 8, Top: 5, Bottom: 5})
+			SetTextAlign(fyne.TextAlignLeading).SetPadding(myfyne.EdgeInset{Left: 8, Top: 5, Bottom: 5}).
+			SetIsSelected(false)
 
+		if sm.selectMenuItem != nil {
+			if subItemCopy.Name == sm.selectMenuItem.Name &&
+				len(subItemCopy.SubItems) == len(sm.selectMenuItem.SubItems) {
+				btn.SetIsSelected(true)
+			}
+		}
 		// 根据 alignment 设置对齐方式，并增加 left padding
 		leftPadding := NewFixedWidthBox(sm.padding, nil, nil)
 		paddingContainer := container.NewHBox(leftPadding, btn)
