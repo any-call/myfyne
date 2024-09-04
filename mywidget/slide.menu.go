@@ -13,19 +13,18 @@ import (
 // SideMenu 定义自定义组件
 type SideMenu struct {
 	widget.BaseWidget
-	menuItems        []myfyne.MenuItem
-	onItemSelectedCb func(myfyne.MenuItem)
+	menuItems        []myfyne.MenuItemModel
+	onItemSelectedCb func(model myfyne.MenuItemModel)
 	alignment        fyne.TextAlign
 	padding          float32
 	accordion        *widget.Accordion
 	textColor        color.Color
 	selectTextColor  color.Color
 	hoverTextColor   color.Color
-	selectMenuItem   *myfyne.MenuItem
 }
 
 // NewSideMenu 创建一个新的 SideMenu 控件
-func NewSideMenu(menuItems []myfyne.MenuItem, onItemSelected func(myfyne.MenuItem)) *SideMenu {
+func NewSideMenu(menuItems []myfyne.MenuItemModel, onItemSelected func(model myfyne.MenuItemModel)) *SideMenu {
 	sideMenu := &SideMenu{
 		menuItems:        menuItems,
 		alignment:        fyne.TextAlignLeading,
@@ -63,32 +62,43 @@ func (sm *SideMenu) refreshMenuItems() {
 	sm.Refresh()
 }
 
+func (sm *SideMenu) updateSelectMenuItems(listMenuItem []myfyne.MenuItemModel, selectItem myfyne.MenuItemModel) {
+	if len(listMenuItem) == 0 {
+		return
+	}
+
+	for i, _ := range listMenuItem {
+		if listMenuItem[i].Name == selectItem.Name &&
+			len(listMenuItem[i].SubItems) == len(selectItem.SubItems) {
+			listMenuItem[i].IsSelected = true
+		} else {
+			listMenuItem[i].IsSelected = false
+		}
+		if listMenuItem[i].SubItems != nil && len(listMenuItem[i].SubItems) > 0 {
+			sm.updateSelectMenuItems(listMenuItem[i].SubItems, selectItem)
+		}
+	}
+}
+
 // createSubMenu 创建子菜单，支持无限嵌套并设置左侧缩进
-func (sm *SideMenu) createSubMenu(item myfyne.MenuItem, level int) *fyne.Container {
+func (sm *SideMenu) createSubMenu(item myfyne.MenuItemModel, level int) *fyne.Container {
 	subMenuList := container.NewVBox()
 
 	for _, subItem := range item.SubItems {
 		subItemCopy := subItem // 避免闭包引用错误
 		btn := NewMenuButton(subItem.Name, func() {
-			sm.selectMenuItem = &subItemCopy
-			fmt.Println("select menu item :", sm.selectMenuItem.Name)
+			fmt.Println("select menu item :", subItemCopy.Name)
+			sm.updateSelectMenuItems(sm.menuItems, subItemCopy)
+			sm.refreshMenuItems()
 			if sm.onItemSelectedCb != nil {
 				sm.onItemSelectedCb(subItemCopy)
 			}
 		})
 
 		btn.SetTextColor(sm.textColor).SetSelectedTextColor(sm.selectTextColor).SetHoverTextColor(sm.hoverTextColor).
-			SetTextAlign(fyne.TextAlignLeading).SetPadding(myfyne.EdgeInset{Left: 8, Top: 5, Bottom: 5}).
-			SetIsSelected(false)
+			SetTextAlign(fyne.TextAlignLeading).SetPadding(myfyne.EdgeInset{Left: 8, Top: 4, Bottom: 4}).
+			SetIsSelected(subItemCopy.IsSelected)
 
-		if sm.selectMenuItem != nil {
-			fmt.Println("select menu item:", sm.selectMenuItem.Name)
-			if subItemCopy.Name == sm.selectMenuItem.Name &&
-				len(subItemCopy.SubItems) == len(sm.selectMenuItem.SubItems) {
-				btn.SetIsSelected(true)
-				fmt.Println("menu item:", sm.selectMenuItem.Name, " ; true")
-			}
-		}
 		// 根据 alignment 设置对齐方式，并增加 left padding
 		leftPadding := NewFixedWidthBox(sm.padding, nil, nil)
 		paddingContainer := container.NewHBox(leftPadding, btn)
@@ -152,12 +162,12 @@ func (sm *SideMenu) SetSelectTextColor(c color.Color) *SideMenu {
 }
 
 // AddMenuItem 动态增加一个菜单项
-func (sm *SideMenu) AddMenu(item myfyne.MenuItem) {
+func (sm *SideMenu) AddMenu(item myfyne.MenuItemModel) {
 	sm.menuItems = append(sm.menuItems, item)
 	sm.refreshMenuItems()
 }
 
-func (sm *SideMenu) AddSubMenu(parItem myfyne.MenuItem, subItem myfyne.MenuItem) {
+func (sm *SideMenu) AddSubMenu(parItem myfyne.MenuItemModel, subItem myfyne.MenuItemModel) {
 	for i, item := range sm.menuItems {
 		if item.Name == parItem.Name {
 			sm.menuItems[i].SubItems = append(sm.menuItems[i].SubItems, subItem)
