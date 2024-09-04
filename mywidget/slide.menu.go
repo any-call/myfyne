@@ -13,24 +13,24 @@ import (
 // SideMenu 定义自定义组件
 type SideMenu struct {
 	widget.BaseWidget
-	menuItems       []myfyne.MenuItem
-	onItemSelected  func(myfyne.MenuItem)
-	alignment       fyne.TextAlign
-	padding         float32
-	accordion       *widget.Accordion
-	textColor       color.Color
-	selectTextColor color.Color
-	hoverTextColor  color.Color
-	selectMenuItem  *myfyne.MenuItem
+	menuItems        []myfyne.MenuItem
+	onItemSelectedCb func(myfyne.MenuItem)
+	alignment        fyne.TextAlign
+	padding          float32
+	accordion        *widget.Accordion
+	textColor        color.Color
+	selectTextColor  color.Color
+	hoverTextColor   color.Color
+	selectMenuItem   *myfyne.MenuItem
 }
 
 // NewSideMenu 创建一个新的 SideMenu 控件
 func NewSideMenu(menuItems []myfyne.MenuItem, onItemSelected func(myfyne.MenuItem)) *SideMenu {
 	sideMenu := &SideMenu{
-		menuItems:      menuItems,
-		alignment:      fyne.TextAlignLeading,
-		padding:        8,
-		onItemSelected: onItemSelected,
+		menuItems:        menuItems,
+		alignment:        fyne.TextAlignLeading,
+		padding:          8,
+		onItemSelectedCb: onItemSelected,
 	}
 	sideMenu.ExtendBaseWidget(sideMenu)
 	sideMenu.buildMenu()
@@ -71,8 +71,9 @@ func (sm *SideMenu) createSubMenu(item myfyne.MenuItem, level int) *fyne.Contain
 		subItemCopy := subItem // 避免闭包引用错误
 		btn := NewMenuButton(subItem.Name, func() {
 			sm.selectMenuItem = &subItemCopy
-			if sm.onItemSelected != nil {
-				sm.onItemSelected(subItemCopy)
+			fmt.Println("select menu item :", sm.selectMenuItem.Name)
+			if sm.onItemSelectedCb != nil {
+				sm.onItemSelectedCb(subItemCopy)
 			}
 		})
 
