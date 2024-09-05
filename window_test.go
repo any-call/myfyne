@@ -3,6 +3,6 @@ package myfyne
 import "testing"
 
 func TestWindowManager_HideWindow(t *testing.T) {
-	WinManagerIns()
+	winManagerIns()
 	t.Log("aa")
 }

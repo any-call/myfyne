@@ -2,6 +2,7 @@ package myfyne
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 	"sync"
 )
 
@@ -16,7 +17,7 @@ var instance *windowManager
 var once sync.Once
 
 // WinManagerIns 获取 WindowManager 的单例
-func WinManagerIns() *windowManager {
+func winManagerIns() *windowManager {
 	once.Do(func() {
 		instance = &windowManager{
 			windows: make(map[int]fyne.Window),
@@ -128,4 +129,36 @@ func (wm *windowManager) HideWindow(windowId int) {
 		window.Hide()
 	}
 
+}
+
+func SetApp(app fyne.App) {
+	winManagerIns().SetApp(app)
+}
+
+func ShowPage(page Page, centerOnScreen bool, fixedSize bool) {
+	winManagerIns().ShowPage(page, centerOnScreen, fixedSize)
+}
+
+func ClosePage(page Page) {
+	winManagerIns().ClosePage(page)
+}
+
+func GetWindows(p Page) fyne.Window {
+	return winManagerIns().GetWindow(p)
+}
+
+func ShowWindow(windowId int) {
+	winManagerIns().ShowWindow(windowId)
+}
+
+func HideWindow(windowId int) {
+	winManagerIns().HideWindow(windowId)
+}
+
+func ShowError(err error, page Page) {
+	dialog.ShowError(err, winManagerIns().GetWindow(page))
+}
+
+func ShowInfo(title, message string, page Page) {
+	dialog.ShowInformation(title, message, winManagerIns().GetWindow(page))
 }
