@@ -19,10 +19,9 @@ type (
 
 	// MenuItem 定义菜单项的结构
 	MenuItemModel struct {
-		Name       string
-		Icon       fyne.Resource
-		IsSelected bool
-		SubItems   []MenuItemModel
+		Name     string
+		Icon     fyne.Resource
+		SubItems []MenuItemModel
 	}
 )
 

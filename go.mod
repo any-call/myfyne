@@ -5,6 +5,7 @@ go 1.22.2
 require fyne.io/fyne/v2 v2.5.0
 
 require (
+	github.com/any-call/gobase v1.11.1 // indirect
 	github.com/fredbi/uri v1.1.0 // indirect
 	github.com/fyne-io/gl-js v0.0.0-20220119005834-d2da28d9ccfe // indirect
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6 // indirect
