@@ -19,12 +19,12 @@ type SizedBox struct {
 	child      fyne.CanvasObject
 }
 
-func NewFixedWidthBox(width float32, background color.Color, child fyne.CanvasObject) *SizedBox {
-	return NewSizedBox(fyne.NewSize(width, myfyne.Infinity), background, child)
+func NewWidthBox(width float32, child fyne.CanvasObject) *SizedBox {
+	return NewSizedBox(fyne.NewSize(width, myfyne.Infinity), nil, child)
 }
 
-func NewFixedHeightBox(height float32, background color.Color, child fyne.CanvasObject) *SizedBox {
-	return NewSizedBox(fyne.NewSize(myfyne.Infinity, height), background, child)
+func NewHeightBox(height float32, child fyne.CanvasObject) *SizedBox {
+	return NewSizedBox(fyne.NewSize(myfyne.Infinity, height), nil, child)
 }
 
 // NewSizedBox 创建一个新的 SizedBox 实例
