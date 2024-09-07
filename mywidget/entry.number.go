@@ -1,6 +1,7 @@
 package mywidget
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/driver/mobile"
 	"fyne.io/fyne/v2/widget"
@@ -17,8 +18,20 @@ func NewEntryNumber() *EntryNumber {
 	return entry
 }
 
+func NewEntryByInt(i int) *EntryNumber {
+	entry := NewEntryNumber()
+	entry.Text = fmt.Sprintf("%d", i)
+	return entry
+}
+
+func NewEntryByFloat(f float64) *EntryNumber {
+	entry := NewEntryNumber()
+	entry.Text = fmt.Sprintf("%f", f)
+	return entry
+}
+
 func (self *EntryNumber) TypedRune(r rune) {
-	if r >= '0' && r <= '9' {
+	if (r >= '0' && r <= '9') || r == '.' {
 		self.Entry.TypedRune(r)
 	}
 }
