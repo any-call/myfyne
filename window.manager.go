@@ -37,7 +37,7 @@ func (wm *windowManager) SetApp(app fyne.App) {
 }
 
 // ShowPage 显示页面，如果窗口不存在，则创建并显示
-func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool) {
+func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool, isModel bool) {
 	wm.mutex.Lock()
 	defer wm.mutex.Unlock()
 
@@ -55,10 +55,20 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 		wm.windows[windowID] = window
 	}
 
+	window.SetCloseIntercept(func() {
+		if page.WinWillClose() {
+			window.Close()
+		}
+	})
+
+	window.SetOnClosed(page.WinClosed)
+
 	// 设置页面内容并调整窗口大小
 	window.SetContent(page.Content())
 	window.SetTitle(page.WinTitle())
+	window.SetCloseIntercept(func() {
 
+	})
 	winSize := page.WinSize()
 	if winSize.Width <= 0 {
 		winSize.Width = page.Content().MinSize().Width
@@ -75,7 +85,11 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 
 	window.SetFixedSize(fixedSize)
 
-	window.Show()
+	if isModel {
+		window.ShowAndRun()
+	} else {
+		window.Show()
+	}
 }
 
 // ClosePage 关闭页面对应的窗口
@@ -136,7 +150,11 @@ func SetApp(app fyne.App) {
 }
 
 func ShowPage(page Page, centerOnScreen bool, fixedSize bool) {
-	winManagerIns().ShowPage(page, centerOnScreen, fixedSize)
+	winManagerIns().ShowPage(page, centerOnScreen, fixedSize, false)
+}
+
+func ShowModelPage(page Page, centerOnScreen bool, fixedSize bool) {
+	winManagerIns().ShowPage(page, centerOnScreen, fixedSize, true)
 }
 
 func ClosePage(page Page) {

@@ -32,3 +32,11 @@ func (self *BasePage) SetTitle(title string) {
 	self.title = title
 	return
 }
+
+func (self *BasePage) WinWillClose() bool {
+	return true
+}
+
+func (self *BasePage) WinClosed() bool {
+	return true
+}

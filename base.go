@@ -15,6 +15,8 @@ type (
 		WinTitle() string
 		WinID() int
 		WinSize() fyne.Size
+		WinWillClose() bool
+		WinClosed()
 	}
 
 	// MenuItem 定义菜单项的结构
