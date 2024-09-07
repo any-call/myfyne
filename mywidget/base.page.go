@@ -1,6 +1,9 @@
 package mywidget
 
-import "fyne.io/fyne/v2"
+import (
+	"fmt"
+	"fyne.io/fyne/v2"
+)
 
 type BasePage struct {
 	title string
@@ -34,9 +37,11 @@ func (self *BasePage) SetTitle(title string) {
 }
 
 func (self *BasePage) WinWillClose() {
+	fmt.Println("enter basePage WinWillClose")
 	return
 }
 
 func (self *BasePage) WinClosed() {
+	fmt.Println("enter basePage WinClosed")
 	return
 }
