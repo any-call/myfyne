@@ -37,6 +37,6 @@ func (self *BasePage) WinWillClose() bool {
 	return true
 }
 
-func (self *BasePage) WinClosed() bool {
-	return true
+func (self *BasePage) WinClosed() {
+	return
 }
