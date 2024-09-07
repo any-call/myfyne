@@ -33,8 +33,8 @@ func (self *BasePage) SetTitle(title string) {
 	return
 }
 
-func (self *BasePage) WinWillClose() bool {
-	return true
+func (self *BasePage) WinWillClose() {
+	return
 }
 
 func (self *BasePage) WinClosed() {

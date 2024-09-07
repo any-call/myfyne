@@ -55,12 +55,7 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 		wm.windows[windowID] = window
 	}
 
-	window.SetCloseIntercept(func() {
-		if page.WinWillClose() {
-			window.Close()
-		}
-	})
-
+	window.SetCloseIntercept(page.WinWillClose)
 	window.SetOnClosed(page.WinClosed)
 
 	// 设置页面内容并调整窗口大小
