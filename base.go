@@ -18,6 +18,7 @@ type (
 		WinClosed()
 	}
 
+	WinWillCloseFn func() bool
 	// MenuItem 定义菜单项的结构
 	MenuItemModel struct {
 		Name     string
