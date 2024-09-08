@@ -24,6 +24,7 @@ type (
 		Name     string
 		Icon     fyne.Resource
 		SubItems []MenuItemModel
+		OnTapCb  func()
 	}
 )
 

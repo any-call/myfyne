@@ -124,6 +124,10 @@ func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(it
 		}
 
 		item := menu.findMenuItemByUID(menuItems, uids)
+		if item != nil && item.OnTapCb != nil {
+			item.OnTapCb() //先调用menu自带的回调
+		}
+
 		if item != nil && menu.onSelect != nil {
 			menu.onSelect(*item) // 触发点击回调
 		}
