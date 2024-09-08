@@ -36,11 +36,6 @@ func (self *BasePage) SetTitle(title string) {
 	return
 }
 
-func (self *BasePage) WinWillClose() {
-	fmt.Println("enter basePage WinWillClose")
-	return
-}
-
 func (self *BasePage) WinClosed() {
 	fmt.Println("enter basePage WinClosed")
 	return

@@ -15,7 +15,6 @@ type (
 		WinTitle() string
 		WinID() int
 		WinSize() fyne.Size
-		WinWillClose()
 		WinClosed()
 	}
 
