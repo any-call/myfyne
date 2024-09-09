@@ -24,11 +24,18 @@ func (c *Cell) CreateRenderer() fyne.WidgetRenderer {
 
 // 泛型方法，获取或者创建特定类型的控件
 func GetChildByCell[T fyne.CanvasObject](cell *Cell, creator func() T) T {
+	var foundChild T
 	for _, child := range cell.container.Objects {
 		if canvasObj, ok := child.(T); ok {
+			foundChild = canvasObj
 			child.Show()
-			return canvasObj
+		} else {
+			child.Hide()
 		}
+	}
+
+	if foundChild != nil {
+		return foundChild
 	}
 
 	// 如果没有找到相应类型的对象，通过回调创建
