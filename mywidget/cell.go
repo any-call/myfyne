@@ -76,11 +76,6 @@ func (r *cellRenderer) Layout(size fyne.Size) {
 }
 
 func (r *cellRenderer) MinSize() fyne.Size {
-	for _, child := range r.cell.container.Objects {
-		if child.Visible() {
-			return child.MinSize()
-		}
-	}
 	return r.cell.container.MinSize()
 }
 
