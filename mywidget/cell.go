@@ -38,7 +38,7 @@ func SetCellChild[T fyne.CanvasObject](cell *Cell, creator func() T) error {
 	return nil
 }
 
-func GetCellChild[T fyne.CanvasObject](cell *Cell) (T, error) {
+func GetCellChild[T fyne.CanvasObject](cell *Cell) (T, bool) {
 	var foundChild T
 	var isFoundFlag bool
 	for _, child := range cell.container.Objects {
@@ -51,11 +51,7 @@ func GetCellChild[T fyne.CanvasObject](cell *Cell) (T, error) {
 		}
 	}
 
-	if isFoundFlag {
-		return foundChild, nil
-	}
-
-	return foundChild, fmt.Errorf("not found object")
+	return foundChild, isFoundFlag
 }
 
 func CreateCanvasText() *canvas.Text {
