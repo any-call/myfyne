@@ -1,6 +1,7 @@
 package mywidget
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -24,7 +25,20 @@ func (c *Cell) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // 泛型方法，获取或者创建特定类型的控件
-func GetChildByCell[T fyne.CanvasObject](cell *Cell, creator func() T) T {
+func SetCellChild[T fyne.CanvasObject](cell *Cell, creator func() T) error {
+	for _, child := range cell.container.Objects {
+		if _, ok := child.(T); ok {
+			return fmt.Errorf("already exist same type object")
+		}
+	}
+
+	// 如果没有找到相应类型的对象，通过回调创建
+	newChild := creator()
+	cell.container.Add(newChild)
+	return nil
+}
+
+func GetCellChild[T fyne.CanvasObject](cell *Cell) (T, error) {
 	var foundChild T
 	var isFoundFlag bool
 	for _, child := range cell.container.Objects {
@@ -38,14 +52,10 @@ func GetChildByCell[T fyne.CanvasObject](cell *Cell, creator func() T) T {
 	}
 
 	if isFoundFlag {
-		return foundChild
+		return foundChild, nil
 	}
 
-	// 如果没有找到相应类型的对象，通过回调创建
-	newChild := creator()
-	cell.container.Add(newChild)
-	cell.Refresh()
-	return newChild
+	return foundChild, fmt.Errorf("not found object")
 }
 
 func CreateCanvasText() *canvas.Text {
