@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
+	"strconv"
 )
 
 type Pagination struct {
@@ -108,3 +109,21 @@ func (r *paginationRenderer) Objects() []fyne.CanvasObject {
 }
 
 func (r *paginationRenderer) Destroy() {}
+
+func CreatePaginationSize(title string, limit int, fn func(limit int)) fyne.CanvasObject {
+	enter := NewEntryByInt(limit)
+	enter.OnSubmitted = func(s string) {
+		if intV, err := strconv.Atoi(s); err == nil {
+			if fn != nil {
+				fn(intV)
+			}
+		}
+	}
+	if title == "" {
+		title = "设置分页大小："
+	}
+
+	enter.SetText(fmt.Sprintf("%d", limit))
+	formItem := widget.NewFormItem(title, enter)
+	return widget.NewForm(formItem)
+}
