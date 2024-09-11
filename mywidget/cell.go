@@ -2,6 +2,7 @@ package mywidget
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
@@ -45,6 +46,19 @@ func GetChildByCell[T fyne.CanvasObject](cell *Cell, creator func() T) T {
 	cell.container.Add(newChild)
 	cell.Refresh()
 	return newChild
+}
+
+func CreateCanvasText() *canvas.Text {
+	text := canvas.NewText("", nil)
+	text.Alignment = fyne.TextAlignCenter
+	return text
+}
+
+func CreateWidgetLabel() *widget.Label {
+	label := widget.NewLabel("")
+	label.Alignment = fyne.TextAlignCenter
+	label.Wrapping = fyne.TextWrapBreak
+	return label
 }
 
 type cellRenderer struct {
