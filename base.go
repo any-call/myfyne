@@ -2,6 +2,7 @@ package myfyne
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 	"math"
 )
 
@@ -16,6 +17,16 @@ type (
 		WinID() int
 		WinSize() fyne.Size
 		WinClosed()
+	}
+
+	//自定义对话框
+	DialogContent interface {
+		Title() string
+		Content() fyne.CanvasObject  // 返回用于展示的内容
+		SetDialog(dlg dialog.Dialog) // 绑定 dialog 对象
+		SetWindow(win fyne.Window)   // 绑定 window 对象
+		CloseDialog(param any)       // 用于关闭 dialog，并传递关闭参数
+		GetCloseParam() any          // 获取关闭时的参数
 	}
 
 	WinWillCloseFn func() bool
