@@ -1,8 +1,10 @@
-package mydialog
+package mywidget
 
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
+	"golang.org/x/image/colornames"
+	"image/color"
 )
 
 type BaseDialogContent struct {
@@ -10,6 +12,24 @@ type BaseDialogContent struct {
 	dialog     dialog.Dialog
 	window     fyne.Window
 	closeParam any
+}
+
+func (self *BaseDialogContent) ShowLoading(title string, col color.Color, radius float64) *dialog.CustomDialog {
+	if title == "" {
+		title = "Loading"
+	}
+
+	if col == nil {
+		col = colornames.Blue
+	}
+
+	if radius <= 0 {
+		radius = 30
+	}
+
+	loadingDlg := dialog.NewCustomWithoutButtons(title, NewLoadingDots(col, radius).Start(), self.window)
+	loadingDlg.Show()
+	return loadingDlg
 }
 
 func (self *BaseDialogContent) Title() string {
