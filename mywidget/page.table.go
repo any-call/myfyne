@@ -29,7 +29,9 @@ func NewPageTable(onRefresh func(), onConfig func(t *widget.Table)) *PageTable {
 		func() (int, int) { return 0, 0 }, // 默认没有行和列
 		func() fyne.CanvasObject { return widget.NewLabel("") },
 		func(id widget.TableCellID, o fyne.CanvasObject) {})
-
+	pt.table.ShowHeaderRow = true
+	pt.table.ShowHeaderColumn = false
+	pt.table.HideSeparators = false
 	// 使用回调配置 Table
 	if pt.onConfig != nil {
 		pt.onConfig(pt.table)
