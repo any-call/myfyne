@@ -45,6 +45,7 @@ func (pt *PageTable) CreateRenderer() fyne.WidgetRenderer {
 	// 占位界面
 	pt.placeholderMsg = widget.NewLabel("没有数据")
 	pt.placeholderMsg.Alignment = fyne.TextAlignCenter
+	pt.placeholderMsg.Wrapping = fyne.TextWrapWord
 	refreshButton := widget.NewButton("点击刷新", func() {
 		// 点击刷新时调用外部提供的刷新回调
 		if pt.onRefresh != nil {

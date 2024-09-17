@@ -2,7 +2,10 @@ package myfyne
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
+	"time"
 )
 
 func ShowDialogWithCallback(win fyne.Window, content DialogContent, onClose func(param any)) dialog.Dialog {
@@ -18,4 +21,22 @@ func ShowDialogWithCallback(win fyne.Window, content DialogContent, onClose func
 	})
 	dlg.Show() // 显示 dialog
 	return dlg
+}
+
+func ShowToast(window fyne.Window, message string, duration time.Duration) {
+	content := widget.NewLabel(message)
+	dlg := dialog.NewCustomWithoutButtons("", container.NewCenter(content), window)
+	dlg.Show()
+	time.AfterFunc(duration, dlg.Hide)
+	return
+}
+
+func SendNotificationMsg(title, content string) {
+	if title == "" {
+		title = "提示信息"
+	}
+	fyne.CurrentApp().SendNotification(&fyne.Notification{
+		Title:   title,
+		Content: content,
+	})
 }
