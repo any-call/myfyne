@@ -1,7 +1,6 @@
 package mywidget
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -77,14 +76,4 @@ func (pt *PageTable) ShowTable() {
 	pt.placeholder.Hide() // 隐藏占位界面
 	pt.table.Show()       // 显示表格
 	pt.table.Refresh()    // 刷新表格内容
-}
-
-func (pt *PageTable) Show() {
-	fmt.Println("enter page table show")
-	pt.BaseWidget.Show()
-}
-
-func (pt *PageTable) Hide() {
-	fmt.Println("enter page table hide")
-	pt.BaseWidget.Hide()
 }
