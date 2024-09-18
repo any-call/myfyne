@@ -36,6 +36,13 @@ func (wm *windowManager) SetApp(app fyne.App) {
 	}
 }
 
+func (wm *windowManager) GetApp() fyne.App {
+	wm.mutex.Lock()
+	defer wm.mutex.Unlock()
+
+	return wm.app
+}
+
 // ShowPage 显示页面，如果窗口不存在，则创建并显示
 func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool, isModel bool, interceptCloseFn WinWillCloseFn) {
 	wm.mutex.Lock()
@@ -147,6 +154,10 @@ func (wm *windowManager) HideWindow(windowId int) {
 
 func SetApp(app fyne.App) {
 	winManagerIns().SetApp(app)
+}
+
+func GetApp() fyne.App {
+	return winManagerIns().GetApp()
 }
 
 func ShowPage(page Page, centerOnScreen bool, fixedSize bool, interceptCloseFn WinWillCloseFn) {
