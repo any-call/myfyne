@@ -38,15 +38,13 @@ func NewLoadingOverlay(child fyne.CanvasObject, loadColor color.Color, radius fl
 	return lo
 }
 
-// StartLoad shows the loading animation
-func (lo *LoadingOverlay) StartLoad() {
+func (lo *LoadingOverlay) Start() {
 	lo.loadingVisible = true
 	lo.loading.Start()
 	lo.Refresh()
 }
 
-// EndLoad hides the loading animation
-func (lo *LoadingOverlay) EndLoad() {
+func (lo *LoadingOverlay) Stop() {
 	lo.loadingVisible = false
 	lo.loading.Stop()
 	lo.Refresh()
