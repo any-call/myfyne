@@ -1,7 +1,6 @@
 package mywidget
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/widget"
@@ -80,12 +79,10 @@ func (l *LoadingDots) Stop() *LoadingDots {
 }
 
 func (l *LoadingDots) Show() {
-	fmt.Println("loading enter show")
 	l.BaseWidget.Show()
 }
 
 func (l *LoadingDots) Hide() {
-	fmt.Println("loading enter hide")
 	l.BaseWidget.Hide()
 }
 
