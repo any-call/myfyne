@@ -4,11 +4,11 @@ go 1.22.2
 
 require (
 	fyne.io/fyne/v2 v2.5.0
+	fyne.io/x/fyne v0.0.0-20240803204126-8b5b5bfe65ef
 	golang.org/x/image v0.18.0
 )
 
 require (
-	fyne.io/x/fyne v0.0.0-20240803204126-8b5b5bfe65ef // indirect
 	github.com/fredbi/uri v1.1.0 // indirect
 	github.com/fyne-io/gl-js v0.0.0-20220119005834-d2da28d9ccfe // indirect
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6 // indirect
