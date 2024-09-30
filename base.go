@@ -36,6 +36,7 @@ type (
 		Icon     fyne.Resource
 		SubItems []MenuItemModel
 		OnTapCb  func(name string)
+		IsHidden bool // 新增的属性，标识是否隐藏
 	}
 )
 

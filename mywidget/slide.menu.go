@@ -32,8 +32,14 @@ func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(it
 		// 获取子节点
 		func(uid string) (children []string) {
 			if uid == "root" {
-				children := make([]string, len(menuItems))
-				for i := range menuItems {
+				var visibleItems []myfyne.MenuItemModel
+				for _, item := range menuItems {
+					if !item.IsHidden { // 过滤掉隐藏的菜单项
+						visibleItems = append(visibleItems, item)
+					}
+				}
+				children := make([]string, len(visibleItems))
+				for i := range visibleItems {
 					children[i] = fmt.Sprintf("%d", i)
 				}
 				return children
@@ -49,11 +55,18 @@ func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(it
 				return []string{}
 			}
 
-			childUIDs := make([]string, len(item.SubItems))
-			for i := range item.SubItems {
-				childUIDs[i] = fmt.Sprintf("%s-%d", uid, i)
+			var visibleSubItems []myfyne.MenuItemModel
+			for _, subItem := range item.SubItems {
+				if !subItem.IsHidden { // 过滤掉隐藏的子菜单项
+					visibleSubItems = append(visibleSubItems, subItem)
+				}
 			}
-			return childUIDs
+
+			children = make([]string, len(visibleSubItems))
+			for i := range visibleSubItems {
+				children[i] = fmt.Sprintf("%s-%d", uid, i)
+			}
+			return children
 		},
 		// 判断是否为分支节点
 		func(uid string) bool {
@@ -133,6 +146,7 @@ func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(it
 		}
 	}
 
+	menu.tree.OpenAllBranches()
 	menu.ExtendBaseWidget(menu) // 注册自定义控件
 	return menu
 }
