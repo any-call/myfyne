@@ -75,3 +75,7 @@ func (pt *PageTree) ShowTree() {
 	pt.tree.Show()        // 显示表格
 	pt.tree.Refresh()     // 刷新表格内容
 }
+
+func (pt *PageTree) GetTree() *widget.Tree {
+	return pt.tree
+}

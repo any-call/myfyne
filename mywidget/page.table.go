@@ -80,3 +80,7 @@ func (pt *PageTable) ShowTable() {
 	pt.table.Show()       // 显示表格
 	pt.table.Refresh()    // 刷新表格内容
 }
+
+func (pt *PageTable) GetTable() *widget.Table {
+	return pt.table
+}
