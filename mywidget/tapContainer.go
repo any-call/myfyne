@@ -25,6 +25,10 @@ func (c *TapContainer) SetOnTap(onFn func()) {
 	c.onTapped = onFn
 }
 
+func (c *TapContainer) GetChild() fyne.CanvasObject {
+	return c.child
+}
+
 // Tapped 处理单击和双击事件。
 func (c *TapContainer) Tapped(ev *fyne.PointEvent) {
 	if c.onTapped != nil {
