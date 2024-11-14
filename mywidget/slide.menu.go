@@ -16,22 +16,20 @@ type SideMenu struct {
 	menuItems []myfyne.MenuItemModel
 	onSelect  func(item myfyne.MenuItemModel)
 	tree      *widget.Tree
-	root      string
 }
 
 // 创建一个新的 SideMenu 实例
-func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(item myfyne.MenuItemModel)) *SideMenu {
+func NewSideMenu(menuItems []myfyne.MenuItemModel, onSelect func(item myfyne.MenuItemModel)) *SideMenu {
 	menu := &SideMenu{
 		menuItems: menuItems,
 		onSelect:  onSelect,
-		root:      root,
 	}
 
 	// 初始化 tree 的逻辑
 	menu.tree = widget.NewTree(
 		// 获取子节点
 		func(uid string) (children []string) {
-			if uid == "root" {
+			if uid == "" {
 				var visibleItems []myfyne.MenuItemModel
 				for _, item := range menuItems {
 					if !item.IsHidden { // 过滤掉隐藏的菜单项
@@ -70,7 +68,7 @@ func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(it
 		},
 		// 判断是否为分支节点
 		func(uid string) bool {
-			if uid == "root" {
+			if uid == "" {
 				return true
 			}
 
@@ -95,8 +93,8 @@ func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(it
 			hbox := node.(*fyne.Container)
 			icon := hbox.Objects[0].(*widget.Icon)
 			label := hbox.Objects[1].(*widget.Label)
-			if uid == "root" {
-				label.SetText(root)
+			if uid == "" {
+				label.SetText("")
 				return
 			}
 
@@ -123,11 +121,11 @@ func NewSideMenu(root string, menuItems []myfyne.MenuItemModel, onSelect func(it
 	)
 
 	// 设置根节点
-	menu.tree.Root = "root"
+	menu.tree.Root = ""
 
 	// 监听点击事件
 	menu.tree.OnSelected = func(uid string) {
-		if uid == "root" {
+		if uid == "" {
 			return
 		}
 
