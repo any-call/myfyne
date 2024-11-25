@@ -30,16 +30,13 @@ func NewSideMenu(menuItems []myfyne.MenuItemModel, onSelect func(item myfyne.Men
 		// 获取子节点
 		func(uid string) (children []string) {
 			if uid == "" {
-				var visibleItems []myfyne.MenuItemModel
-				for _, item := range menuItems {
+				children := make([]string, 0, len(menuItems))
+				for i, item := range menuItems {
 					if !item.IsHidden { // 过滤掉隐藏的菜单项
-						visibleItems = append(visibleItems, item)
+						children = append(children, fmt.Sprintf("%d", i))
 					}
 				}
-				children := make([]string, len(visibleItems))
-				for i := range visibleItems {
-					children[i] = fmt.Sprintf("%d", i)
-				}
+
 				return children
 			}
 
@@ -53,17 +50,13 @@ func NewSideMenu(menuItems []myfyne.MenuItemModel, onSelect func(item myfyne.Men
 				return []string{}
 			}
 
-			var visibleSubItems []myfyne.MenuItemModel
-			for _, subItem := range item.SubItems {
+			children = make([]string, 0, len(item.SubItems))
+			for i, subItem := range item.SubItems {
 				if !subItem.IsHidden { // 过滤掉隐藏的子菜单项
-					visibleSubItems = append(visibleSubItems, subItem)
+					children = append(children, fmt.Sprintf("%s-%d", uid, i))
 				}
 			}
 
-			children = make([]string, len(visibleSubItems))
-			for i := range visibleSubItems {
-				children[i] = fmt.Sprintf("%s-%d", uid, i)
-			}
 			return children
 		},
 		// 判断是否为分支节点
