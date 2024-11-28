@@ -59,6 +59,10 @@ func (p *Pagination) matchMaxCells() int {
 }
 
 func (p *Pagination) getTotalItems() int {
+	if p.totalPages <= 0 {
+		return 0
+	}
+
 	if p.totalPages <= p.pagesPerBatch+4 {
 		return p.totalPages + 2
 	}
