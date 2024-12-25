@@ -19,7 +19,7 @@ type DatePicker struct {
 }
 
 // NewDatePicker 创建一个新的 DatePicker 控件
-func NewDatePicker(t time.Time, changed func(t time.Time)) *DatePicker {
+func NewDatePicker(t time.Time, zeroTimePlace string, changed func(t time.Time)) *DatePicker {
 	dp := &DatePicker{
 		onChanged:    changed,
 		selectedDate: t,
@@ -32,7 +32,11 @@ func NewDatePicker(t time.Time, changed func(t time.Time)) *DatePicker {
 	dp.displayButton.IconPlacement = widget.ButtonIconTrailingText
 
 	if dp.selectedDate.IsZero() {
-		dp.displayButton.SetText("请选择日期")
+		if zeroTimePlace != "" {
+			dp.displayButton.SetText(zeroTimePlace)
+		} else {
+			dp.displayButton.SetText("请选择日期")
+		}
 	} else {
 		dp.displayButton.SetText(dp.selectedDate.Format("2006-01-02"))
 	}
