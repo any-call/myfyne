@@ -15,6 +15,7 @@ type DatePicker struct {
 	selectedDate  time.Time
 	calendarPop   *widget.PopUp
 	displayButton *widget.Button
+	placeHolder   string
 	onChanged     func(t time.Time)
 }
 
@@ -23,6 +24,7 @@ func NewDatePicker(t time.Time, zeroTimePlace string, changed func(t time.Time))
 	dp := &DatePicker{
 		onChanged:    changed,
 		selectedDate: t,
+		placeHolder:  zeroTimePlace,
 	}
 
 	dp.displayButton = widget.NewButton("", func() {
@@ -54,6 +56,19 @@ func (dp *DatePicker) GetDate() time.Time {
 	return dp.selectedDate
 }
 
+func (dp *DatePicker) Clear() {
+	dp.selectedDate = time.Time{} // Reset to zero value
+	if dp.placeHolder != "" {
+		dp.displayButton.SetText(dp.placeHolder) // Update display
+	} else {
+		dp.displayButton.SetText("请选择日期") // Update display
+	}
+
+	if dp.onChanged != nil {
+		dp.onChanged(dp.selectedDate) // Notify changes
+	}
+}
+
 // showCalendar 弹出日历选择框，显示在 DatePicker 的下方
 func (dp *DatePicker) showCalendar(w fyne.Window) {
 	showTime := dp.selectedDate
@@ -71,11 +86,17 @@ func (dp *DatePicker) showCalendar(w fyne.Window) {
 		}
 	})
 
+	// Add a "Clear" button
+	clearButton := widget.NewButton("清空", func() {
+		dp.Clear() // Call the new method
+		dp.calendarPop.Hide()
+	})
+
 	// 获取 DatePicker 的相对位置
 	pos := dp.popupPos()
 
 	// 使用弹窗显示 Calendar，显示在 DatePicker 的下方
-	dp.calendarPop = widget.NewPopUp(container.NewVBox(calendar), w.Canvas())
+	dp.calendarPop = widget.NewPopUp(container.NewVBox(calendar, clearButton), w.Canvas())
 
 	// 显示日历的弹窗，设置位置在 DatePicker 下方
 	//dp.calendarPop.ShowAtPosition(fyne.NewPos(pos.X, pos.Y+dp.Size().Height))
