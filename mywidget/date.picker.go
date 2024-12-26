@@ -56,7 +56,12 @@ func (dp *DatePicker) GetDate() time.Time {
 
 // showCalendar 弹出日历选择框，显示在 DatePicker 的下方
 func (dp *DatePicker) showCalendar(w fyne.Window) {
-	calendar := xwidget.NewCalendar(dp.selectedDate, func(t time.Time) {
+	showTime := dp.selectedDate
+	if showTime.IsZero() {
+		showTime = time.Now()
+	}
+
+	calendar := xwidget.NewCalendar(showTime, func(t time.Time) {
 		oldTime := dp.selectedDate
 		dp.selectedDate = t
 		dp.displayButton.SetText(dp.selectedDate.Format("2006-01-02"))

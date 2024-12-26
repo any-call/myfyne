@@ -16,12 +16,6 @@ type (
 func CreateSearchBox(placeHolder string, width float32, fn func(str string), isSearchBtn bool) fyne.CanvasObject {
 	searchEntry := widget.NewEntry()
 	searchEntry.SetPlaceHolder(placeHolder)
-	searchEntry.OnSubmitted = func(s string) {
-		if fn != nil {
-			fn(searchEntry.Text)
-		}
-	}
-
 	if isSearchBtn {
 		searchBtn := widget.NewButton("查询", func() {
 			if fn != nil {
@@ -33,6 +27,12 @@ func CreateSearchBox(placeHolder string, width float32, fn func(str string), isS
 			NewWidthBox(width, searchEntry),
 			NewWidthBox(100, searchBtn),
 		)
+	} else {
+		searchEntry.OnChanged = func(s string) {
+			if fn != nil {
+				fn(searchEntry.Text)
+			}
+		}
 	}
 
 	return NewWidthBox(width, searchEntry)
