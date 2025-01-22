@@ -45,9 +45,6 @@ func (wm *windowManager) GetApp() fyne.App {
 
 // ShowPage 显示页面，如果窗口不存在，则创建并显示
 func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool, isModel bool, interceptCloseFn WinWillCloseFn) {
-	wm.mutex.Lock()
-	defer wm.mutex.Unlock()
-
 	if wm.app == nil {
 		panic("App instance not set. Use SetApp to initialize.")
 	}
@@ -55,12 +52,14 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	windowID := page.WinID()
 
 	// 检查窗口是否已经存在
+	wm.mutex.Lock()
 	window, exists := wm.windows[windowID]
 	if !exists {
 		// 创建新窗口
 		window = wm.app.NewWindow("")
 		wm.windows[windowID] = window
 	}
+	wm.mutex.Unlock()
 
 	if interceptCloseFn != nil {
 		window.SetCloseIntercept(func() {
