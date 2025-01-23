@@ -28,8 +28,8 @@ func winManagerIns() *windowManager {
 
 // SetApp 设置 fyne.App 实例
 func (wm *windowManager) SetApp(app fyne.App) {
-	wm.mutex.Lock()
-	defer wm.mutex.Unlock()
+	//wm.mutex.Lock()
+	//defer wm.mutex.Unlock()
 
 	if wm.app == nil {
 		wm.app = app
@@ -37,8 +37,8 @@ func (wm *windowManager) SetApp(app fyne.App) {
 }
 
 func (wm *windowManager) GetApp() fyne.App {
-	wm.mutex.Lock()
-	defer wm.mutex.Unlock()
+	//wm.mutex.Lock()
+	//defer wm.mutex.Unlock()
 
 	return wm.app
 }
@@ -52,14 +52,14 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	windowID := page.WinID()
 
 	// 检查窗口是否已经存在
-	wm.mutex.Lock()
+	//wm.mutex.Lock()
 	window, exists := wm.windows[windowID]
 	if !exists {
 		// 创建新窗口
 		window = wm.app.NewWindow("")
 		wm.windows[windowID] = window
 	}
-	wm.mutex.Unlock()
+	//wm.mutex.Unlock()
 
 	if interceptCloseFn != nil {
 		window.SetCloseIntercept(func() {
@@ -100,8 +100,8 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 
 // ClosePage 关闭页面对应的窗口
 func (wm *windowManager) ClosePage(page Page) {
-	wm.mutex.Lock()
-	defer wm.mutex.Unlock()
+	//wm.mutex.Lock()
+	//defer wm.mutex.Unlock()
 
 	if wm.app == nil {
 		panic("App instance not set. Use SetApp to initialize.")
@@ -116,16 +116,16 @@ func (wm *windowManager) ClosePage(page Page) {
 
 // GetWindow 获取页面对应的窗口
 func (wm *windowManager) GetWindow(page Page) fyne.Window {
-	wm.mutex.Lock()
-	defer wm.mutex.Unlock()
+	//wm.mutex.Lock()
+	//defer wm.mutex.Unlock()
 
 	return wm.windows[page.WinID()]
 }
 
 // ShowWindow 显示指定页面的窗口
 func (wm *windowManager) ShowWindow(windowId int) {
-	wm.mutex.Lock()
-	defer wm.mutex.Unlock()
+	//wm.mutex.Lock()
+	//defer wm.mutex.Unlock()
 
 	if wm.app == nil {
 		panic("App instance not set. Use SetApp to initialize.")
@@ -138,8 +138,8 @@ func (wm *windowManager) ShowWindow(windowId int) {
 
 // HideWindow 隐藏指定页面的窗口
 func (wm *windowManager) HideWindow(windowId int) {
-	wm.mutex.Lock()
-	defer wm.mutex.Unlock()
+	//wm.mutex.Lock()
+	//defer wm.mutex.Unlock()
 
 	if wm.app == nil {
 		panic("App instance not set. Use SetApp to initialize.")
