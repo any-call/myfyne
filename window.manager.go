@@ -61,11 +61,6 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	}
 	wm.mutex.Unlock()
 
-	window.SetOnClosed(func() { //在窗口关闭时。要清掉这个window，不然，下次显示就不会生效了
-		wm.CloseWindow(windowID)
-		window = nil
-	})
-
 	if interceptCloseFn != nil {
 		window.SetCloseIntercept(func() {
 			if interceptCloseFn() {
@@ -75,7 +70,12 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	} else {
 		window.SetCloseIntercept(nil)
 	}
-	window.SetOnClosed(page.WinClosed)
+
+	window.SetOnClosed(func() { //在窗口关闭时。要清掉这个window，不然，下次显示就不会生效了
+		page.WinClosed() //页面清除处理
+		wm.CloseWindow(windowID)
+		window = nil
+	})
 
 	// 设置页面内容并调整窗口大小
 	window.SetContent(page.Content())
