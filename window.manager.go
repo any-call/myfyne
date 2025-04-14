@@ -61,6 +61,11 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	}
 	wm.mutex.Unlock()
 
+	window.SetOnClosed(func() { //在窗口关闭时。要清掉这个window，不然，下次显示就不会生效了
+		wm.CloseWindow(windowID)
+		window = nil
+	})
+
 	if interceptCloseFn != nil {
 		window.SetCloseIntercept(func() {
 			if interceptCloseFn() {
@@ -148,7 +153,20 @@ func (wm *windowManager) HideWindow(windowId int) {
 	if window, ok := wm.windows[windowId]; ok {
 		window.Hide()
 	}
+}
 
+// 当关闭窗口时，清掉一些
+func (wm *windowManager) CloseWindow(windowId int) {
+	wm.mutex.Lock()
+	defer wm.mutex.Unlock()
+
+	if wm.app == nil {
+		panic("App instance not set. Use SetApp to initialize.")
+	}
+
+	if _, ok := wm.windows[windowId]; ok {
+		delete(wm.windows, windowId)
+	}
 }
 
 func SetApp(app fyne.App) {
