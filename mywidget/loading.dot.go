@@ -106,7 +106,10 @@ func (r *loadingDotsRenderer) Layout(size fyne.Size) {
 		} else if i == 3 || i == 4 { // 中间的点较大
 			dotSize *= 1.4
 		}
-		dot.Resize(fyne.NewSize(dotSize, dotSize)) // 调整大小
+		fyne.DoAndWait(func() {
+			dot.Resize(fyne.NewSize(dotSize, dotSize)) // 调整大小
+		})
+
 		x := centerX + float32(math.Cos(angle))*offset
 		y := centerY + float32(math.Sin(angle))*offset
 		dot.Move(fyne.NewPos(x, y))
@@ -114,7 +117,9 @@ func (r *loadingDotsRenderer) Layout(size fyne.Size) {
 
 	// 刷新对象
 	for _, dot := range r.dots {
-		dot.Refresh()
+		fyne.DoAndWait(func() {
+			dot.Refresh()
+		})
 	}
 }
 
