@@ -80,7 +80,9 @@ func (r *loadingOverlayRenderer) MinSize() fyne.Size {
 
 func (r *loadingOverlayRenderer) Refresh() {
 	r.Layout(r.overlay.container.Size())
-	r.overlay.container.Refresh()
+	fyne.Do(func() {
+		r.overlay.container.Refresh()
+	})
 }
 
 func (r *loadingOverlayRenderer) Objects() []fyne.CanvasObject {
