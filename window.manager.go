@@ -4,7 +4,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"sync"
-	"time"
 )
 
 // windowManager 是 WindowManager 的单例实现
@@ -97,16 +96,21 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 		go func() {
 			window.ShowAndRun() // 注意：阻塞式
 			if centerOnScreen {
-				time.Sleep(20 * time.Millisecond)
-				fyne.Do(func() {
+				if !exists {
 					window.CenterOnScreen()
-				})
+				} else {
+					go window.CenterOnScreen()
+				}
 			}
 		}()
 	} else {
 		window.Show()
 		if centerOnScreen {
-			window.CenterOnScreen()
+			if !exists {
+				window.CenterOnScreen()
+			} else {
+				go window.CenterOnScreen()
+			}
 		}
 	}
 }
