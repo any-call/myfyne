@@ -28,6 +28,10 @@ func (p *PopupMenuTrigger) Tapped(e *fyne.PointEvent) {
 	widget.ShowPopUpMenuAtPosition(p.menu, canvas, e.AbsolutePosition)
 }
 
+func (p *PopupMenuTrigger) GetMenu() *fyne.Menu {
+	return p.menu
+}
+
 // 渲染器实现
 func (p *PopupMenuTrigger) CreateRenderer() fyne.WidgetRenderer {
 	// 包装 trigger 的渲染器
