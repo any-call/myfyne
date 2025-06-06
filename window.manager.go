@@ -78,8 +78,11 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	})
 
 	// 设置页面内容并调整窗口大小
-	window.SetContent(page.Content())
-	window.SetTitle(page.WinTitle())
+	fyne.Do(func() {
+		window.SetContent(page.Content())
+		window.SetTitle(page.WinTitle())
+	})
+
 	winSize := page.WinSize()
 	if winSize.Width <= 0 {
 		winSize.Width = page.Content().MinSize().Width
@@ -89,18 +92,21 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 		winSize.Height = page.Content().MinSize().Height
 	}
 
-	window.Resize(winSize)
-	if centerOnScreen {
-		window.CenterOnScreen()
-	}
+	fyne.Do(func() {
 
-	window.SetFixedSize(fixedSize)
+		window.Resize(winSize)
+		if centerOnScreen {
+			window.CenterOnScreen()
+		}
 
-	if isModel {
-		window.ShowAndRun()
-	} else {
-		window.Show()
-	}
+		window.SetFixedSize(fixedSize)
+
+		if isModel {
+			window.ShowAndRun()
+		} else {
+			window.Show()
+		}
+	})
 }
 
 // ClosePage 关闭页面对应的窗口
