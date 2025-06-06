@@ -91,9 +91,13 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 
 	window.Resize(winSize)
 	if centerOnScreen {
-		go fyne.Do(func() {
-			window.CenterOnScreen() //第二次赋值，刷新会卡 ，通过在一个协程中处理
-		})
+		if !exists { //首次
+			window.CenterOnScreen()
+		} else {
+			go fyne.Do(func() {
+				window.CenterOnScreen() //第二次赋值，刷新会卡 ，通过在一个协程中处理
+			})
+		}
 	}
 
 	window.SetFixedSize(fixedSize)
