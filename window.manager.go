@@ -106,12 +106,7 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	} else {
 		window.Show()
 		if centerOnScreen {
-			go func() {
-				time.Sleep(20 * time.Millisecond) // 留点时间让窗口初始化
-				fyne.Do(func() {
-					window.CenterOnScreen()
-				})
-			}()
+			window.CenterOnScreen()
 		}
 	}
 }
