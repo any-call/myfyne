@@ -1,7 +1,6 @@
 package myfyne
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"sync"
@@ -49,14 +48,12 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	if wm.app == nil {
 		panic("App instance not set. Use SetApp to initialize.")
 	}
-	fmt.Println("run 001")
 	windowID := page.WinID()
 
 	// 检查窗口是否已经存在
 	wm.mutex.Lock()
 	window, exists := wm.windows[windowID]
 	if !exists {
-		fmt.Println("run 002")
 		// 创建新窗口
 		window = wm.app.NewWindow("")
 		wm.windows[windowID] = window
@@ -64,14 +61,12 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	wm.mutex.Unlock()
 
 	if interceptCloseFn != nil {
-		fmt.Println("run 003")
 		window.SetCloseIntercept(func() {
 			if interceptCloseFn() {
 				window.Close()
 			}
 		})
 	} else {
-		fmt.Println("run 004")
 		window.SetCloseIntercept(nil)
 	}
 
@@ -94,24 +89,20 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 		winSize.Height = page.Content().MinSize().Height
 	}
 
-	fmt.Println("run 005:", winSize)
 	window.Resize(winSize)
 	if centerOnScreen {
-		fmt.Println("run 006:")
-		window.CenterOnScreen()
+		go fyne.Do(func() {
+			window.CenterOnScreen() //第二次赋值，刷新会卡 ，通过在一个协程中处理
+		})
 	}
 
-	fmt.Println("run 007:")
 	window.SetFixedSize(fixedSize)
 
 	if isModel {
-		fmt.Println("run 008:")
 		window.ShowAndRun()
 	} else {
-		fmt.Println("run 009:")
 		window.Show()
 	}
-	fmt.Println("run 010:")
 }
 
 // ClosePage 关闭页面对应的窗口
