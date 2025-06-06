@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"sync"
+	"time"
 )
 
 // windowManager 是 WindowManager 的单例实现
@@ -90,22 +91,28 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	}
 
 	window.Resize(winSize)
-	if centerOnScreen {
-		if !exists { //首次
-			window.CenterOnScreen()
-		} else {
-			go fyne.Do(func() {
-				window.CenterOnScreen() //第二次赋值，刷新会卡 ，通过在一个协程中处理
-			})
-		}
-	}
-
 	window.SetFixedSize(fixedSize)
 
 	if isModel {
-		window.ShowAndRun()
+		go func() {
+			window.ShowAndRun() // 注意：阻塞式
+			if centerOnScreen {
+				time.Sleep(20 * time.Millisecond)
+				fyne.Do(func() {
+					window.CenterOnScreen()
+				})
+			}
+		}()
 	} else {
 		window.Show()
+		if centerOnScreen {
+			go func() {
+				time.Sleep(20 * time.Millisecond) // 留点时间让窗口初始化
+				fyne.Do(func() {
+					window.CenterOnScreen()
+				})
+			}()
+		}
 	}
 }
 
