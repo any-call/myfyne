@@ -72,11 +72,13 @@ func CreateSelect[M any](selectFn func(item M), configFn func(entry *widget.Sele
 					}
 				}
 
-				selectObject.SetOptions(items)
-				selectObject.SetSelectedIndex(selectIndex)
-				if selectFn != nil {
-					selectFn(list[selectIndex].Model)
-				}
+				fyne.Do(func() {
+					selectObject.SetOptions(items)
+					selectObject.SetSelectedIndex(selectIndex)
+					if selectFn != nil {
+						selectFn(list[selectIndex].Model)
+					}
+				})
 			}
 
 		}(listItemFn)
