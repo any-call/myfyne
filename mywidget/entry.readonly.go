@@ -2,6 +2,7 @@ package mywidget
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -14,6 +15,15 @@ func NewReadonlyEntry(text string) *ReadonlyEntry {
 	e := &ReadonlyEntry{}
 	e.ExtendBaseWidget(e)
 	e.SetText(text)
+	e.Wrapping = fyne.TextWrapWord
+	e.TextStyle = fyne.TextStyle{} // 可设置加粗等
+	return e
+}
+
+func NewReadonlyEntryWithData(text binding.String) *ReadonlyEntry {
+	e := &ReadonlyEntry{}
+	e.ExtendBaseWidget(e)
+	e.Bind(text)
 	e.Wrapping = fyne.TextWrapWord
 	e.TextStyle = fyne.TextStyle{} // 可设置加粗等
 	return e
