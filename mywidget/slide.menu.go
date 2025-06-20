@@ -179,3 +179,44 @@ func (m *SideMenu) parseUID(uid string) ([]int, error) {
 func (m *SideMenu) GetTree() *widget.Tree {
 	return m.tree
 }
+
+func (m *SideMenu) SelectNames(names ...string) {
+	if node, b := m.FindNodeID(names...); b {
+		m.tree.Select(node)
+	}
+}
+
+func (m *SideMenu) FindNodeID(names ...string) (string, bool) {
+	var path []int
+
+	var search func(items []myfyne.MenuItemModel, depth int) bool
+	search = func(items []myfyne.MenuItemModel, depth int) bool {
+		if depth >= len(names) {
+			return false
+		}
+		for i, item := range items {
+			if item.Name == names[depth] {
+				path = append(path, i)
+				if depth == len(names)-1 {
+					return true
+				}
+				if search(item.SubItems, depth+1) {
+					return true
+				}
+				// 回溯
+				path = path[:len(path)-1]
+			}
+		}
+		return false
+	}
+
+	if search(m.menuItems, 0) {
+		// 转换为 "0-1-2" 形式
+		var parts []string
+		for _, idx := range path {
+			parts = append(parts, strconv.Itoa(idx))
+		}
+		return strings.Join(parts, "-"), true
+	}
+	return "", false
+}
