@@ -175,3 +175,7 @@ func (m *SideMenu) parseUID(uid string) ([]int, error) {
 	}
 	return uids, nil
 }
+
+func (m *SideMenu) GetTree() *widget.Tree {
+	return m.tree
+}
