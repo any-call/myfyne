@@ -135,22 +135,32 @@ func (b *BindStruct[T]) extractStruct(prefix string, v reflect.Value) {
 		switch fieldVal.Kind() {
 		case reflect.Struct:
 			b.extractStruct(path, fieldVal)
+			break
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			it := binding.NewInt()
 			it.Set(int(fieldVal.Int()))
 			b.items[path] = it
+			break
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			it := binding.NewInt()
+			it.Set(int(fieldVal.Uint()))
+			b.items[path] = it
+			break
 		case reflect.Float32, reflect.Float64:
 			it := binding.NewFloat()
 			it.Set(fieldVal.Float())
 			b.items[path] = it
+			break
 		case reflect.String:
 			it := binding.NewString()
 			it.Set(fieldVal.String())
 			b.items[path] = it
+			break
 		case reflect.Bool:
 			it := binding.NewBool()
 			it.Set(fieldVal.Bool())
 			b.items[path] = it
+			break
 		default:
 			// 忽略
 		}
