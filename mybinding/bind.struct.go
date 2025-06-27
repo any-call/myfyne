@@ -38,27 +38,37 @@ func (b *BindStruct[T]) AddComputedField(name string, compute func(T) any) {
 
 	// 初始化对应 DataItem
 	switch val := compute(b.value).(type) {
-	case int:
-		it := binding.NewInt()
-		it.Set(val)
-		b.items[name] = it
-	case int32, int64:
+	//case int:
+	//	it := binding.NewInt()
+	//	it.Set(val)
+	//	b.items[name] = it
+	//	break
+	case int, int8, int16, int32, int64:
 		it := binding.NewInt()
 		it.Set(int(reflect.ValueOf(val).Int()))
 		b.items[name] = it
+		break
+	case uint, uint8, uint16, uint32, uint64:
+		it := binding.NewInt()
+		it.Set(int(reflect.ValueOf(val).Uint()))
+		b.items[name] = it
+		break
 	case float32, float64:
 		it := binding.NewFloat()
 		it.Set(reflect.ValueOf(val).Float())
 		b.items[name] = it
+		break
 	case string:
 		it := binding.NewString()
 		it.Set(val)
 		b.items[name] = it
+		break
 	// 更多类型根据需要扩展
 	default:
 		it := binding.NewString()
 		it.Set(fmt.Sprintf("%v", val))
 		b.items[name] = it
+		break
 	}
 }
 
@@ -106,11 +116,23 @@ func (b *BindStruct[T]) SetValue(newVal T) {
 		if item, ok := b.items[path]; ok {
 			switch data := item.(type) {
 			case binding.Int:
-				data.Set(int(reflect.ValueOf(result).Int()))
+				v := reflect.ValueOf(result)
+				switch v.Kind() {
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+					data.Set(int(reflect.ValueOf(result).Int()))
+					break
+				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+					data.Set(int(reflect.ValueOf(result).Uint()))
+					break
+				}
+
+				break
 			case binding.Float:
 				data.Set(reflect.ValueOf(result).Float())
+				break
 			case binding.String:
 				data.Set(fmt.Sprintf("%v", result))
+				break
 			}
 		}
 	}
@@ -188,13 +210,24 @@ func (b *BindStruct[T]) updateStruct(prefix string, v reflect.Value) {
 		} else if item, ok := b.items[path]; ok {
 			switch data := item.(type) {
 			case binding.Int:
-				data.Set(int(fieldVal.Int()))
+				switch fieldVal.Kind() {
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+					data.Set(int(fieldVal.Int()))
+					break
+				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+					data.Set(int(fieldVal.Uint()))
+					break
+				}
+				break
 			case binding.Float:
 				data.Set(fieldVal.Float())
+				break
 			case binding.String:
 				data.Set(fieldVal.String())
+				break
 			case binding.Bool:
 				data.Set(fieldVal.Bool())
+				break
 			}
 		}
 	}
