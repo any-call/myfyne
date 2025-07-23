@@ -5,6 +5,11 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+type MenuDefine struct {
+	Name  string
+	OnTap func()
+}
+
 type PopupMenuTrigger struct {
 	widget.BaseWidget
 	trigger           fyne.CanvasObject // 触发器对象（任意 fyne.CanvasObject）
@@ -23,13 +28,10 @@ func NewPopupMenuTrigger(trigger fyne.CanvasObject, menu *fyne.Menu) *PopupMenuT
 	return p
 }
 
-func NewSimplePopupMenu(trigger fyne.CanvasObject, listMenus []struct {
-	MenuName string
-	Tapped   func()
-}) *PopupMenuTrigger {
+func NewSimplePopupMenu(trigger fyne.CanvasObject, listMenus []MenuDefine) *PopupMenuTrigger {
 	menu := fyne.NewMenu("")
 	for i, _ := range listMenus {
-		menu.Items = append(menu.Items, fyne.NewMenuItem(listMenus[i].MenuName, listMenus[i].Tapped))
+		menu.Items = append(menu.Items, fyne.NewMenuItem(listMenus[i].Name, listMenus[i].OnTap))
 	}
 	return NewPopupMenuTrigger(trigger, menu)
 }
