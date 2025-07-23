@@ -7,8 +7,9 @@ import (
 
 type PopupMenuTrigger struct {
 	widget.BaseWidget
-	trigger fyne.CanvasObject // 触发器对象（任意 fyne.CanvasObject）
-	menu    *fyne.Menu        // 弹出的菜单
+	trigger           fyne.CanvasObject // 触发器对象（任意 fyne.CanvasObject）
+	menu              *fyne.Menu        // 弹出的菜单
+	isSecondaryTapped bool
 }
 
 // 创建新的 PopupMenuTrigger
@@ -22,10 +23,34 @@ func NewPopupMenuTrigger(trigger fyne.CanvasObject, menu *fyne.Menu) *PopupMenuT
 	return p
 }
 
+func NewSimplePopupMenu(trigger fyne.CanvasObject, listMenus []struct {
+	MenuName string
+	Tapped   func()
+}) *PopupMenuTrigger {
+	menu := fyne.NewMenu("")
+	for i, _ := range listMenus {
+		menu.Items = append(menu.Items, fyne.NewMenuItem(listMenus[i].MenuName, listMenus[i].Tapped))
+	}
+	return NewPopupMenuTrigger(trigger, menu)
+}
+
+func (p *PopupMenuTrigger) SetSecondaryTapped(flag bool) {
+	p.isSecondaryTapped = flag
+}
+
 // 实现点击事件
 func (p *PopupMenuTrigger) Tapped(e *fyne.PointEvent) {
-	canvas := fyne.CurrentApp().Driver().CanvasForObject(p.trigger.(fyne.CanvasObject))
-	widget.ShowPopUpMenuAtPosition(p.menu, canvas, e.AbsolutePosition)
+	if p.isSecondaryTapped == false {
+		canvas := fyne.CurrentApp().Driver().CanvasForObject(p.trigger.(fyne.CanvasObject))
+		widget.ShowPopUpMenuAtPosition(p.menu, canvas, e.AbsolutePosition)
+	}
+}
+
+func (p *PopupMenuTrigger) TappedSecondary(e *fyne.PointEvent) {
+	if p.isSecondaryTapped {
+		canvas := fyne.CurrentApp().Driver().CanvasForObject(p.trigger.(fyne.CanvasObject))
+		widget.ShowPopUpMenuAtPosition(p.menu, canvas, e.AbsolutePosition)
+	}
 }
 
 func (p *PopupMenuTrigger) GetMenu() *fyne.Menu {
