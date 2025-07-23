@@ -22,7 +22,7 @@ type EllipsisLabel struct {
 	enableTooltip  bool
 	tooltip        *widget.PopUp
 	hovering       bool
-	tooltipContent *canvas.Text
+	tooltipContent *widget.Label
 }
 
 // NewEllipsisLabel 创建一个 EllipsisLabel
@@ -47,34 +47,39 @@ func (e *EllipsisLabel) CreateRenderer() fyne.WidgetRenderer {
 }
 
 // SetText 重新设置文本
-func (e *EllipsisLabel) SetText(text string) {
+func (e *EllipsisLabel) SetText(text string) *EllipsisLabel {
 	e.fullText = text
 	e.Refresh()
+	return e
 }
 
 func (e *EllipsisLabel) GetText() string {
 	return e.fullText
 }
 
-func (e *EllipsisLabel) SetTextColor(c color.Color) {
+func (e *EllipsisLabel) SetTextColor(c color.Color) *EllipsisLabel {
 	e.textColor = c
 	e.textObj.Color = c
 	canvas.Refresh(e.textObj)
+	return e
 }
-func (e *EllipsisLabel) SetTextSize(size float32) {
+func (e *EllipsisLabel) SetTextSize(size float32) *EllipsisLabel {
 	e.textSize = size
 	e.textObj.TextSize = size
 	canvas.Refresh(e.textObj)
+	return e
 }
 
-func (e *EllipsisLabel) SetTextStyle(style fyne.TextStyle) {
+func (e *EllipsisLabel) SetTextStyle(style fyne.TextStyle) *EllipsisLabel {
 	e.textStyle = style
 	e.textObj.TextStyle = style
 	canvas.Refresh(e.textObj)
+	return e
 }
 
-func (e *EllipsisLabel) SetTooltipEnabled(enabled bool) {
+func (e *EllipsisLabel) SetTooltipEnabled(enabled bool) *EllipsisLabel {
 	e.enableTooltip = enabled
+	return e
 }
 
 func (e *EllipsisLabel) IsTooltipEnabled() bool {
@@ -106,19 +111,15 @@ func (e *EllipsisLabel) MouseIn(ev *desktop.MouseEvent) {
 	if !e.enableTooltip {
 		return
 	}
-	// 可选：立即显示 tooltip，而不是等 MouseMoved()
-	if e.tooltip == nil {
-		text := canvas.NewText(e.fullText, e.textColor)
-		text.TextSize = e.textSize
-		text.TextStyle = e.textStyle
 
+	if e.tooltip == nil {
+		text := widget.NewLabel(e.fullText)
 		e.tooltipContent = text
 		e.tooltip = widget.NewPopUp(text, fyne.CurrentApp().Driver().CanvasForObject(e))
 	}
-	pos := ev.Position
-	e.tooltip.Move(fyne.NewPos(pos.X+10, pos.Y+10))
-	e.tooltip.Show()
 
+	e.tooltip.Move(ev.AbsolutePosition)
+	e.tooltip.Show()
 }
 
 func (e *EllipsisLabel) MouseMoved(ev *desktop.MouseEvent) {
@@ -127,10 +128,7 @@ func (e *EllipsisLabel) MouseMoved(ev *desktop.MouseEvent) {
 	}
 
 	if e.tooltip == nil {
-		text := canvas.NewText(e.fullText, e.textColor)
-		text.TextSize = e.textSize
-		text.TextStyle = e.textStyle
-
+		text := widget.NewLabel(e.fullText)
 		e.tooltipContent = text
 		e.tooltip = widget.NewPopUp(text, fyne.CurrentApp().Driver().CanvasForObject(e))
 		e.tooltip.Show() // 只初始化时 Show 一次
@@ -138,7 +136,7 @@ func (e *EllipsisLabel) MouseMoved(ev *desktop.MouseEvent) {
 
 	// 只更新位置，不重复调用 Show()
 	if e.tooltip.Visible() {
-		e.tooltip.Move(fyne.NewPos(ev.Position.X+10, ev.Position.Y+10))
+		e.tooltip.Move(ev.AbsolutePosition)
 	}
 }
 
@@ -147,11 +145,4 @@ func (e *EllipsisLabel) MouseOut() {
 	if e.tooltip != nil {
 		e.tooltip.Hide()
 	}
-}
-
-func (e *EllipsisLabel) showTooltipAt(pos fyne.Position) {
-	if e.tooltip == nil {
-		return
-	}
-	e.tooltip.ShowAtPosition(fyne.NewPos(pos.X+10, pos.Y+20))
 }
