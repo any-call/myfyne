@@ -93,24 +93,22 @@ func (wm *windowManager) ShowPage(page Page, centerOnScreen bool, fixedSize bool
 	window.SetFixedSize(fixedSize)
 
 	if isModel {
-		go func() {
-			window.ShowAndRun() // 注意：阻塞式
-			if centerOnScreen {
-				if !exists {
-					window.CenterOnScreen()
-				} else {
-					go window.CenterOnScreen()
-				}
-			}
-		}()
+		if centerOnScreen {
+			//if !exists { //fix on v2.6.2
+			window.CenterOnScreen()
+			//} else {
+			//	go window.CenterOnScreen()
+			//}
+		}
+		window.ShowAndRun() // 注意：阻塞式
 	} else {
 		window.Show()
 		if centerOnScreen {
-			if !exists {
-				window.CenterOnScreen()
-			} else {
-				go window.CenterOnScreen()
-			}
+			//if !exists {
+			window.CenterOnScreen()
+			//} else {
+			//	go window.CenterOnScreen()
+			//}
 		}
 	}
 }
