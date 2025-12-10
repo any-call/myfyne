@@ -1,11 +1,13 @@
 module github.com/any-call/myfyne
 
-go 1.22.2
+go 1.24.0
+
+toolchain go1.24.2
 
 require (
-	fyne.io/fyne/v2 v2.7.0
-	fyne.io/x/fyne v0.0.0-20250910205345-ecc79984d005
-	golang.org/x/image v0.24.0
+	fyne.io/fyne/v2 v2.7.1
+	fyne.io/x/fyne v0.0.0-20251207215151-082633745b25
+	golang.org/x/image v0.34.0
 )
 
 require (
@@ -27,5 +29,5 @@ require (
 	github.com/yuin/goldmark v1.7.8 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/text v0.32.0 // indirect
 )
