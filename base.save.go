@@ -2,9 +2,10 @@ package myfyne
 
 import (
 	"encoding/json"
-	"fyne.io/fyne/v2"
 	"os"
 	"path"
+
+	"fyne.io/fyne/v2"
 )
 
 func GetLocFile(app fyne.App, fileName string) string {
